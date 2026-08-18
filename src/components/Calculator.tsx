@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ChangeEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react'
 import { Check, Minus, Plus } from 'lucide-react'
 import { Container } from './ui/Container'
 import { Slider } from './ui/Slider'
@@ -43,6 +43,7 @@ export function Calculator() {
 
   const priceCursor = useCursorSafeDigitInput()
   const downAmountCursor = useCursorSafeDigitInput()
+  const skipDownAmountSyncRef = useRef(false)
 
   const effectiveDownPercent = mode === 'noDown' ? 0 : downPercent
   const monthlyMarkupRate = isPremium ? PREMIUM_MONTHLY_MARKUP_RATE : STANDARD_MONTHLY_MARKUP_RATE
@@ -55,9 +56,15 @@ export function Calculator() {
   const roundedDownPercent = Math.round(result.downPaymentPercent)
 
   // Keep the amount field in sync whenever price, term or the percent slider
-  // change it from elsewhere — harmless no-op when the edit originated here,
-  // since the amount just typed already round-trips to the same value.
+  // change it from elsewhere — but skip it right after the amount field's
+  // own handlers already set the input directly (including to an empty
+  // string while the user is mid-edit), otherwise this would immediately
+  // overwrite a cleared field back to "0".
   useEffect(() => {
+    if (skipDownAmountSyncRef.current) {
+      skipDownAmountSyncRef.current = false
+      return
+    }
     setDownAmountInput(formatNumber(result.downPaymentAmount))
   }, [result.downPaymentAmount])
 
@@ -103,6 +110,7 @@ export function Calculator() {
     const numeric = digits ? Math.min(maxAmount, Number(digits)) : 0
     const formatted = digits ? formatNumber(numeric) : ''
 
+    skipDownAmountSyncRef.current = true
     setDownPercent(total > 0 ? (numeric / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
     setDownAmountInput(formatted)
     restoreCursor(formatted)
@@ -115,6 +123,7 @@ export function Calculator() {
     const currentAmount = total * (downPercent / 100)
     const clamped = Math.min(maxAmount, Math.max(minAmount, currentAmount || minAmount))
 
+    skipDownAmountSyncRef.current = true
     setDownPercent(total > 0 ? (clamped / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
     setDownAmountInput(formatNumber(clamped))
   }
@@ -123,12 +132,12 @@ export function Calculator() {
     <section id="calculator" className="scroll-mt-20 border-b border-line py-16 sm:py-24">
       <Container>
         <div className="mb-10 flex items-baseline justify-between border-b border-line pb-3">
-          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Услуга № 01 — 02</span>
+          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Услуга № 01</span>
           <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Калькулятор</span>
         </div>
 
         <div className="mb-10 max-w-2xl">
-          <h2 className="font-serif text-3xl font-medium text-ink sm:text-4xl">
+          <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
             Рассчитайте рассрочку за пару секунд
           </h2>
           <p className="mt-3 text-ink-soft">
@@ -144,7 +153,7 @@ export function Calculator() {
                 key={tab.id}
                 type="button"
                 onClick={() => setMode(tab.id)}
-                className={`border-b-2 px-6 py-4 text-xs tracking-[0.1em] uppercase transition-colors duration-200 ${
+                className={`border-b-2 px-6 py-4 text-xs font-semibold tracking-[0.1em] uppercase transition-colors duration-200 ${
                   mode === tab.id ? 'border-accent text-ink' : 'border-transparent text-ink-faint hover:text-ink'
                 }`}
               >
@@ -200,7 +209,7 @@ export function Calculator() {
                       value={priceInput}
                       onChange={handlePriceChange}
                       onBlur={handlePriceBlur}
-                      className="font-tabular w-full bg-transparent text-2xl text-ink outline-none"
+                      className="font-tabular w-full bg-transparent text-2xl font-bold text-ink outline-none"
                     />
                     <span className="text-lg text-ink-faint">₽</span>
                   </div>
@@ -233,7 +242,7 @@ export function Calculator() {
               <div>
                 <div className="flex items-center justify-between">
                   <label className="text-xs tracking-[0.1em] text-ink-soft uppercase">Срок рассрочки</label>
-                  <span className="font-tabular text-sm text-ink">{months} мес.</span>
+                  <span className="font-tabular text-sm font-bold text-ink">{months} мес.</span>
                 </div>
                 <div className="mt-5">
                   <Slider
@@ -257,7 +266,7 @@ export function Calculator() {
                     <label htmlFor="downAmount" className="text-xs tracking-[0.1em] text-ink-soft uppercase">
                       Первый взнос
                     </label>
-                    <span className="font-tabular text-sm text-ink">{roundedDownPercent}%</span>
+                    <span className="font-tabular text-sm font-bold text-ink">{roundedDownPercent}%</span>
                   </div>
                   <div className="mt-3 flex items-center gap-2 rounded-sm border border-line px-4 py-3 transition-colors duration-200 focus-within:border-ink">
                     <input
@@ -267,7 +276,7 @@ export function Calculator() {
                       value={downAmountInput}
                       onChange={handleDownAmountChange}
                       onBlur={handleDownAmountBlur}
-                      className="font-tabular w-full bg-transparent text-2xl text-ink outline-none"
+                      className="font-tabular w-full bg-transparent text-2xl font-bold text-ink outline-none"
                     />
                     <span className="text-lg text-ink-faint">₽</span>
                   </div>
@@ -299,7 +308,7 @@ export function Calculator() {
 
             <div className="flex flex-col bg-ink p-6 text-paper transition-colors duration-300 sm:p-8">
               <p className="text-xs tracking-[0.16em] text-paper/50 uppercase">Ежемесячный платёж</p>
-              <p className="font-tabular font-serif mt-2 text-6xl leading-none text-accent-invert">
+              <p className="font-tabular font-serif mt-2 text-6xl leading-none font-black text-accent-invert">
                 {formatRub(result.monthlyPayment)}
               </p>
               <p className="mt-2 text-xs text-paper/50">в течение {result.months} месяцев</p>
@@ -331,7 +340,7 @@ export function Calculator() {
                 href={requestHref}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-6 flex items-center justify-center rounded-sm bg-accent py-3.5 text-xs tracking-[0.1em] text-paper uppercase transition-opacity duration-200 hover:opacity-85"
+                className="mt-6 flex items-center justify-center rounded-sm bg-accent py-3.5 text-xs font-bold tracking-[0.1em] text-paper uppercase transition-opacity duration-200 hover:opacity-85"
               >
                 Оставить заявку
               </a>
@@ -346,8 +355,8 @@ export function Calculator() {
 function Row({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
   return (
     <div className="flex items-center justify-between gap-4">
-      <span className={strong ? 'text-paper/85' : 'text-paper/55'}>{label}</span>
-      <span className={`font-tabular ${strong ? 'font-medium text-paper' : 'text-paper/80'}`}>{value}</span>
+      <span className={strong ? 'font-semibold text-paper/85' : 'text-paper/60'}>{label}</span>
+      <span className={`font-tabular font-semibold ${strong ? 'text-paper' : 'text-paper/85'}`}>{value}</span>
     </div>
   )
 }

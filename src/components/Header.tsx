@@ -22,40 +22,42 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-paper transition-colors duration-300">
-      <Container className="flex h-20 items-center justify-between">
-        <a href="#top" className="flex items-center gap-3">
-          <img src={theme === 'dark' ? iconWhite : iconNavy} alt="NISAB" className="h-8 w-8" />
+      <Container className="flex h-24 items-center justify-between">
+        <a href="#calculator" className="flex items-center gap-3">
+          <img src={theme === 'dark' ? iconWhite : iconNavy} alt="NISAB" className="h-12 w-12" />
           <span className="flex flex-col leading-none">
-            <span className="font-serif text-xl italic text-ink">NISAB</span>
-            <span className="mt-1.5 flex items-center gap-1.5 text-[9px] tracking-[0.24em] text-ink-faint uppercase">
+            <span className="font-serif text-2xl font-bold italic text-ink">NISAB</span>
+            <span className="mt-1.5 flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.22em] text-ink-faint uppercase">
               Рассрочка <Star8 className="h-2 w-2" /> Инвестиции
             </span>
           </span>
         </a>
 
-        <nav className="hidden items-center gap-8 lg:flex">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="border-b border-transparent pb-0.5 text-xs tracking-[0.1em] text-ink-soft uppercase transition-colors duration-200 hover:border-accent hover:text-ink"
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
+        <div className="hidden items-center gap-8 xl:flex">
+          <nav className="flex items-center gap-6">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="whitespace-nowrap border-b border-transparent pb-0.5 text-xs font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors duration-200 hover:border-accent hover:text-ink"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
 
-        <div className="hidden items-center gap-5 lg:flex">
-          <ThemeToggle />
-          <a
-            href={PHONE_HREF}
-            className="rounded-sm border border-ink px-4 py-2 text-xs tracking-[0.06em] text-ink transition-colors duration-200 hover:bg-ink hover:text-paper"
-          >
-            {PHONE_DISPLAY}
-          </a>
+          <div className="flex shrink-0 items-center gap-5">
+            <ThemeToggle />
+            <a
+              href={PHONE_HREF}
+              className="whitespace-nowrap rounded-sm border border-ink px-4 py-2 text-xs font-semibold tracking-[0.06em] text-ink transition-colors duration-200 hover:bg-ink hover:text-paper"
+            >
+              {PHONE_DISPLAY}
+            </a>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3 lg:hidden">
+        <div className="flex items-center gap-3 xl:hidden">
           <ThemeToggle />
           <button
             type="button"
@@ -70,7 +72,7 @@ export function Header() {
       </Container>
 
       <div
-        className={`accordion-rows border-line bg-paper lg:hidden ${
+        className={`accordion-rows border-line bg-paper xl:hidden ${
           open ? 'grid-rows-[1fr] border-t opacity-100' : 'grid-rows-[0fr] border-t-0 opacity-0'
         }`}
       >
@@ -82,7 +84,7 @@ export function Header() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="py-3.5 text-xs tracking-[0.1em] text-ink-soft uppercase transition-colors duration-200 hover:text-accent"
+                  className="py-3.5 text-xs font-semibold tracking-[0.1em] text-ink-soft uppercase transition-colors duration-200 hover:text-accent"
                 >
                   {link.label}
                 </a>
@@ -90,7 +92,7 @@ export function Header() {
             </nav>
             <a
               href={PHONE_HREF}
-              className="mt-4 flex items-center justify-center rounded-sm border border-ink py-3 text-xs tracking-[0.06em] text-ink"
+              className="mt-4 flex items-center justify-center rounded-sm border border-ink py-3 text-xs font-semibold tracking-[0.06em] text-ink"
             >
               {PHONE_DISPLAY}
             </a>

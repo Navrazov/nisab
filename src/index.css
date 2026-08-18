@@ -1,4 +1,4 @@
-/* Cormorant Garamond + IBM Plex Sans are loaded via a render-blocking <link>
+/* Fraunces + IBM Plex Sans are loaded via a render-blocking <link>
    in index.html, not @import here — @import would only be discovered after
    the app's own bundled stylesheet finishes loading, adding a full extra
    round-trip. During that gap, an anchor click (scroll-behavior: smooth)
@@ -9,13 +9,13 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-serif: 'Cormorant Garamond', ui-serif, Georgia, serif;
+  --font-serif: 'Fraunces', ui-serif, Georgia, serif;
   --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
 
   /* semantic tokens — redefined under .dark below, so components reference
      these names directly (bg-paper, text-ink, border-line…) with no dark:
      prefix needed. Dark is the brand-primary mode (mirrors the logo's own
-     white-on-black presentation); light is the secondary, inverted mode. */
+     white-on-navy presentation); light is the secondary, inverted mode. */
   --color-paper: #f5f3ef;
   --color-paper-raised: #ece6d9;
   --color-ink: #0f0e0c;
@@ -32,12 +32,14 @@
 }
 
 .dark {
-  --color-paper: #0a0a08;
-  --color-paper-raised: #141210;
-  --color-ink: #f5f3ef;
-  --color-ink-soft: #b7b0a0;
-  --color-ink-faint: #6e6858;
-  --color-line: #262319;
+  /* deep navy, not black — matches the logo's own background rather than
+     a generic dark-mode near-black */
+  --color-paper: #0a1220;
+  --color-paper-raised: #121e32;
+  --color-ink: #f3f4f8;
+  --color-ink-soft: #b3bacb;
+  --color-ink-faint: #69718a;
+  --color-line: #223050;
 
   --color-accent: #c9a063;
   --color-accent-invert: #8a6a3c;
@@ -52,6 +54,7 @@ body {
   font-family: var(--font-sans);
   background-color: var(--color-paper);
   color: var(--color-ink);
+  font-weight: 500;
   transition: background-color 300ms ease, color 300ms ease;
 }
 
@@ -85,11 +88,22 @@ body {
   transition: grid-template-rows 280ms ease, opacity 280ms ease;
 }
 
-/* thin-line range slider, small precise dot thumb in brass — no shadows */
+/* range slider — thin visual track drawn on the pseudo-track, but the real
+   input element keeps a tall invisible hit box so it's easy to grab,
+   especially with a finger on mobile */
 input[type='range'].nisab-slider {
   -webkit-appearance: none;
   appearance: none;
-  height: 1px;
+  width: 100%;
+  height: 32px;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+  margin: 0;
+}
+
+input[type='range'].nisab-slider::-webkit-slider-runnable-track {
+  height: 2px;
   border-radius: 0;
   background: linear-gradient(
     to right,
@@ -98,33 +112,45 @@ input[type='range'].nisab-slider {
     var(--color-line) var(--fill, 50%),
     var(--color-line) 100%
   );
-  outline: none;
+  transition: background 250ms ease;
+}
+
+input[type='range'].nisab-slider::-moz-range-track {
+  height: 2px;
+  border-radius: 0;
+  background: linear-gradient(
+    to right,
+    var(--color-ink) 0%,
+    var(--color-ink) var(--fill, 50%),
+    var(--color-line) var(--fill, 50%),
+    var(--color-line) 100%
+  );
   transition: background 250ms ease;
 }
 
 input[type='range'].nisab-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 11px;
-  height: 11px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: var(--color-accent);
   cursor: pointer;
-  margin-top: 0;
+  margin-top: -9px;
   transition: transform 150ms ease, background-color 250ms ease;
 }
 
 input[type='range'].nisab-slider:hover::-webkit-slider-thumb {
-  transform: scale(1.35);
+  transform: scale(1.25);
 }
 
 input[type='range'].nisab-slider:active::-webkit-slider-thumb {
-  transform: scale(1.55);
+  transform: scale(1.4);
 }
 
 input[type='range'].nisab-slider::-moz-range-thumb {
-  width: 11px;
-  height: 11px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   border: none;
   background: var(--color-accent);
@@ -133,9 +159,28 @@ input[type='range'].nisab-slider::-moz-range-thumb {
 }
 
 input[type='range'].nisab-slider:hover::-moz-range-thumb {
-  transform: scale(1.35);
+  transform: scale(1.25);
 }
 
 input[type='range'].nisab-slider:active::-moz-range-thumb {
-  transform: scale(1.55);
+  transform: scale(1.4);
+}
+
+/* even bigger touch target on phones, where a 1px-tall bar is very hard to
+   grab on the first tap */
+@media (max-width: 640px) {
+  input[type='range'].nisab-slider {
+    height: 40px;
+  }
+
+  input[type='range'].nisab-slider::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+    margin-top: -11px;
+  }
+
+  input[type='range'].nisab-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+  }
 }

@@ -1,5 +1,4 @@
 import { Header } from './components/Header'
-import { Hero } from './components/Hero'
 import { Calculator } from './components/Calculator'
 import { HowItWorks } from './components/HowItWorks'
 import { Advantages } from './components/Advantages'
@@ -14,7 +13,6 @@ function App() {
     <div className="min-h-screen bg-paper transition-colors duration-300">
       <Header />
       <main>
-        <Hero />
         <Calculator />
         <HowItWorks />
         <Advantages />

@@ -21,16 +21,16 @@ export function Audience() {
     <section id="partners" className="scroll-mt-20 py-16 sm:py-24">
       <Container>
         <div className="mb-10 flex items-baseline justify-between border-b border-line pb-3">
-          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Услуга № 01 — 05</span>
+          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Услуга № 01 — 04</span>
           <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Кому подходит</span>
         </div>
 
-        <h2 className="mb-12 font-serif text-3xl font-medium text-ink sm:text-4xl">Один калькулятор для всех</h2>
+        <h2 className="mb-12 font-serif text-3xl font-bold text-ink sm:text-4xl">Один калькулятор для всех</h2>
 
         <div className="grid border-t border-line sm:grid-cols-3 sm:divide-x sm:divide-line">
           {AUDIENCE.map((item) => (
             <div key={item.title} className="border-b border-line py-7 pr-6 sm:border-b-0 sm:pl-6 sm:first:pl-0">
-              <h3 className="font-serif text-xl font-medium text-ink">{item.title}</h3>
+              <h3 className="font-serif text-xl font-bold text-ink">{item.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">{item.text}</p>
             </div>
           ))}
