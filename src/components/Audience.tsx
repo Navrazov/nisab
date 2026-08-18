@@ -20,11 +20,6 @@ export function Audience() {
   return (
     <section id="partners" className="scroll-mt-20 py-16 sm:py-24">
       <Container>
-        <div className="mb-10 flex items-baseline justify-between border-b border-line pb-3">
-          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Услуга № 01 — 04</span>
-          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Кому подходит</span>
-        </div>
-
         <h2 className="mb-12 font-serif text-3xl font-bold text-ink sm:text-4xl">Один калькулятор для всех</h2>
 
         <div className="grid border-t border-line sm:grid-cols-3 sm:divide-x sm:divide-line">

@@ -8,7 +8,7 @@ const ADVANTAGES = [
   },
   {
     title: 'Фиксированная наценка',
-    text: 'Ставка 3,8% в месяц известна заранее и не меняется в течение всего срока рассрочки.',
+    text: 'Ставка наценки известна заранее и не меняется в течение всего срока рассрочки.',
   },
   {
     title: 'Гибкий срок',
@@ -24,11 +24,6 @@ export function Advantages() {
   return (
     <section id="advantages" className="scroll-mt-20 bg-paper-raised py-16 transition-colors duration-300 sm:py-24">
       <Container>
-        <div className="mb-10 flex items-baseline justify-between border-b border-line pb-3">
-          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Услуга № 01 — 03</span>
-          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Преимущества</span>
-        </div>
-
         <h2 className="mb-12 max-w-xl font-serif text-3xl font-bold text-ink sm:text-4xl">
           Прозрачная альтернатива банковскому кредиту
         </h2>

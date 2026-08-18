@@ -20,11 +20,6 @@ export function LegalInfo() {
   return (
     <section id="legal" className="scroll-mt-20 bg-paper-raised py-16 transition-colors duration-300 sm:py-24">
       <Container>
-        <div className="mb-10 flex items-baseline justify-between border-b border-line pb-3">
-          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Услуга № 01 — 06</span>
-          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Важно знать</span>
-        </div>
-
         <h2 className="mb-12 font-serif text-3xl font-bold text-ink sm:text-4xl">Правовая информация</h2>
 
         <div className="divide-y divide-line border-t border-line">

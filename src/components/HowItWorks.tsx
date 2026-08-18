@@ -23,11 +23,6 @@ export function HowItWorks() {
   return (
     <section id="how-it-works" className="scroll-mt-20 border-b border-line py-16 sm:py-24">
       <Container>
-        <div className="mb-10 flex items-baseline justify-between border-b border-line pb-3">
-          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Услуга № 01 — 02</span>
-          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Процесс</span>
-        </div>
-
         <h2 className="mb-12 font-serif text-3xl font-bold text-ink sm:text-4xl">Как это работает</h2>
 
         <div className="grid border-t border-line sm:grid-cols-2 sm:divide-x sm:divide-line lg:grid-cols-4">

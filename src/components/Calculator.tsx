@@ -55,6 +55,19 @@ export function Calculator() {
 
   const roundedDownPercent = Math.round(result.downPaymentPercent)
 
+  // The down-payment slider drags across round ruble amounts (like the
+  // price slider), not raw percent — the bounds are the min/max allowed
+  // percent converted to rubles and snapped to the nearest step so every
+  // reachable position is a round number.
+  const downAmountBounds = useMemo(() => {
+    const total = result.totalWithMarkup
+    const rawMin = total * (MIN_DOWN_PAYMENT_PERCENT / 100)
+    const rawMax = total * (MAX_DOWN_PAYMENT_PERCENT / 100)
+    const min = Math.ceil(rawMin / PRICE_STEP) * PRICE_STEP
+    const max = Math.floor(rawMax / PRICE_STEP) * PRICE_STEP
+    return { min, max: Math.max(min, max) }
+  }, [result.totalWithMarkup])
+
   // Keep the amount field in sync whenever price, term or the percent slider
   // change it from elsewhere — but skip it right after the amount field's
   // own handlers already set the input directly (including to an empty
@@ -131,11 +144,6 @@ export function Calculator() {
   return (
     <section id="calculator" className="scroll-mt-20 border-b border-line py-16 sm:py-24">
       <Container>
-        <div className="mb-10 flex items-baseline justify-between border-b border-line pb-3">
-          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Услуга № 01</span>
-          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Калькулятор</span>
-        </div>
-
         <div className="mb-10 max-w-2xl">
           <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
             Рассчитайте рассрочку за пару секунд
@@ -180,9 +188,7 @@ export function Calculator() {
                 </span>
                 <span>
                   <span className="block text-sm font-medium text-ink">Премиум</span>
-                  <span className="block text-xs text-ink-soft">
-                    Сниженная наценка — 3% в месяц вместо 3,8%
-                  </span>
+                  <span className="block text-xs text-ink-soft">Сниженная наценка на рассрочку</span>
                 </span>
               </label>
 
@@ -282,12 +288,15 @@ export function Calculator() {
                   </div>
                   <div className="mt-5">
                     <Slider
-                      min={MIN_DOWN_PAYMENT_PERCENT}
-                      max={MAX_DOWN_PAYMENT_PERCENT}
-                      step={1}
-                      value={downPercent}
-                      onChange={setDownPercent}
-                      ariaLabel="Первый взнос в процентах"
+                      min={downAmountBounds.min}
+                      max={downAmountBounds.max}
+                      step={PRICE_STEP}
+                      value={result.downPaymentAmount}
+                      onChange={(amount) => {
+                        const total = result.totalWithMarkup
+                        setDownPercent(total > 0 ? (amount / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
+                      }}
+                      ariaLabel="Первый взнос"
                     />
                   </div>
                   <div className="mt-2 flex justify-between text-[11px] text-ink-faint">
@@ -315,10 +324,7 @@ export function Calculator() {
 
               <div className="mt-8 space-y-3 border-t border-paper/15 pt-6 text-sm">
                 <Row label="Стоимость товара" value={formatRub(result.price)} />
-                <Row
-                  label={`Наценка (${isPremium ? '3' : '3,8'}%/мес.)`}
-                  value={`+ ${formatRub(result.markupAmount)}`}
-                />
+                <Row label="Наценка" value={`+ ${formatRub(result.markupAmount)}`} />
                 <Row label="Итого с наценкой" value={formatRub(result.totalWithMarkup)} strong />
                 {mode === 'withDown' && (
                   <div className="animate-fade-in">
