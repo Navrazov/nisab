@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --color-brand-50: #f5f6fa;
+  --color-brand-100: #e7e9f2;
+  --color-brand-200: #c9cee2;
+  --color-brand-300: #a3abc8;
+  --color-brand-400: #7883ab;
+  --color-brand-500: #57628f;
+  --color-brand-600: #414c74;
+  --color-brand-700: #333c5e;
+  --color-brand-800: #262d48;
+  --color-brand-900: #1a2036;
+  --color-brand-950: #0c0f1c;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #ffffff;
+  color: var(--color-brand-900);
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+.dark body {
+  background-color: #0f1322;
+  color: #f2f3f8;
+}
+
+::selection {
+  background-color: var(--color-brand-800);
+  color: white;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 280ms ease-out;
+}
+
+.accordion-rows {
+  display: grid;
+  transition: grid-template-rows 280ms ease, opacity 280ms ease;
+}
+
+/* custom range slider */
+input[type='range'].nisab-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  background: linear-gradient(to right, var(--color-brand-800) 0%, var(--color-brand-800) var(--fill, 50%), var(--color-brand-200) var(--fill, 50%), var(--color-brand-200) 100%);
+  outline: none;
+  transition: background 250ms ease;
+}
+
+.dark input[type='range'].nisab-slider {
+  background: linear-gradient(to right, #ffffff 0%, #ffffff var(--fill, 50%), var(--color-brand-700) var(--fill, 50%), var(--color-brand-700) 100%);
+}
+
+input[type='range'].nisab-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--color-brand-900);
+  border: 3px solid white;
+  box-shadow: 0 1px 4px rgba(16, 20, 35, 0.35);
+  cursor: pointer;
+  margin-top: 0;
+  transition: transform 150ms ease, box-shadow 150ms ease, background-color 250ms ease, border-color 250ms ease;
+}
+
+input[type='range'].nisab-slider:hover::-webkit-slider-thumb {
+  transform: scale(1.1);
+}
+
+input[type='range'].nisab-slider:active::-webkit-slider-thumb {
+  transform: scale(1.15);
+  box-shadow: 0 2px 8px rgba(16, 20, 35, 0.45);
+}
+
+.dark input[type='range'].nisab-slider::-webkit-slider-thumb {
+  background: #ffffff;
+  border: 3px solid var(--color-brand-900);
+}
+
+input[type='range'].nisab-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--color-brand-900);
+  border: 3px solid white;
+  box-shadow: 0 1px 4px rgba(16, 20, 35, 0.35);
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, background-color 250ms ease, border-color 250ms ease;
+}
+
+input[type='range'].nisab-slider:hover::-moz-range-thumb {
+  transform: scale(1.1);
+}
+
+input[type='range'].nisab-slider:active::-moz-range-thumb {
+  transform: scale(1.15);
+  box-shadow: 0 2px 8px rgba(16, 20, 35, 0.45);
+}
+
+.dark input[type='range'].nisab-slider::-moz-range-thumb {
+  background: #ffffff;
+  border: 3px solid var(--color-brand-900);
+}
