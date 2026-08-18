@@ -1,7 +1,8 @@
-export const MONTHLY_MARKUP_RATE = 0.038
+export const STANDARD_MONTHLY_MARKUP_RATE = 0.038
+export const PREMIUM_MONTHLY_MARKUP_RATE = 0.03
 
-export const MIN_PRICE = 3000
-export const MAX_PRICE = 3000000
+export const MIN_PRICE = 1000
+export const MAX_PRICE = 1000000
 export const DEFAULT_PRICE = 50000
 export const PRICE_STEP = 500
 
@@ -29,13 +30,14 @@ export function calculate(
   price: number,
   months: number,
   downPaymentPercent: number,
+  monthlyMarkupRate: number = STANDARD_MONTHLY_MARKUP_RATE,
 ): CalculatorResult {
   const safePrice = Number.isFinite(price) && price > 0 ? price : 0
   const safeMonths = Math.min(MAX_MONTHS, Math.max(MIN_MONTHS, months))
   const safeDownPercent = Math.min(100, Math.max(0, downPaymentPercent))
 
-  const markupPercent = MONTHLY_MARKUP_RATE * safeMonths * 100
-  const markupAmount = safePrice * (MONTHLY_MARKUP_RATE * safeMonths)
+  const markupPercent = monthlyMarkupRate * safeMonths * 100
+  const markupAmount = safePrice * (monthlyMarkupRate * safeMonths)
   const totalWithMarkup = safePrice + markupAmount
   const downPaymentAmount = totalWithMarkup * (safeDownPercent / 100)
   const financedAmount = totalWithMarkup - downPaymentAmount

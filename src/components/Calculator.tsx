@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ChangeEvent } from 'react'
-import { Minus, Plus } from 'lucide-react'
+import { Check, Minus, Plus } from 'lucide-react'
 import { Container } from './ui/Container'
 import { Slider } from './ui/Slider'
 import { buildWhatsAppHref } from '../lib/contacts'
@@ -14,7 +14,9 @@ import {
   MIN_DOWN_PAYMENT_PERCENT,
   MIN_MONTHS,
   MIN_PRICE,
+  PREMIUM_MONTHLY_MARKUP_RATE,
   PRICE_STEP,
+  STANDARD_MONTHLY_MARKUP_RATE,
   calculate,
   formatNumber,
   formatRub,
@@ -30,6 +32,7 @@ const TABS: { id: Mode; label: string }[] = [
 
 export function Calculator() {
   const [mode, setMode] = useState<Mode>('withDown')
+  const [isPremium, setIsPremium] = useState(false)
   const [price, setPrice] = useState(DEFAULT_PRICE)
   const [priceInput, setPriceInput] = useState(formatNumber(DEFAULT_PRICE))
   const [months, setMonths] = useState(DEFAULT_MONTHS)
@@ -42,10 +45,11 @@ export function Calculator() {
   const downAmountCursor = useCursorSafeDigitInput()
 
   const effectiveDownPercent = mode === 'noDown' ? 0 : downPercent
+  const monthlyMarkupRate = isPremium ? PREMIUM_MONTHLY_MARKUP_RATE : STANDARD_MONTHLY_MARKUP_RATE
 
   const result = useMemo(
-    () => calculate(price, months, effectiveDownPercent),
-    [price, months, effectiveDownPercent],
+    () => calculate(price, months, effectiveDownPercent, monthlyMarkupRate),
+    [price, months, effectiveDownPercent, monthlyMarkupRate],
   )
 
   const roundedDownPercent = Math.round(result.downPaymentPercent)
@@ -65,9 +69,10 @@ export function Calculator() {
         ? `Взнос ${roundedDownPercent}% (${formatRub(result.downPaymentAmount)}).`
         : 'Без первого взноса.',
       `Ежемесячный платёж: ${formatRub(result.monthlyPayment)}.`,
-    ]
+      isPremium ? 'Тариф: Премиум.' : '',
+    ].filter(Boolean)
     return buildWhatsAppHref(parts.join(' '))
-  }, [mode, result, roundedDownPercent])
+  }, [mode, result, roundedDownPercent, isPremium])
 
   function handlePriceChange(event: ChangeEvent<HTMLInputElement>) {
     const { digits, restoreCursor } = priceCursor.parseWithCursor(event)
@@ -150,6 +155,28 @@ export function Calculator() {
 
           <div className="grid lg:grid-cols-2 lg:divide-x lg:divide-line">
             <div className="space-y-10 p-6 sm:p-8">
+              <label className="flex cursor-pointer items-start gap-3 rounded-sm border border-line p-4 transition-colors duration-200 hover:border-ink">
+                <input
+                  type="checkbox"
+                  checked={isPremium}
+                  onChange={(event) => setIsPremium(event.target.checked)}
+                  className="sr-only"
+                />
+                <span
+                  className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border transition-colors duration-200 ${
+                    isPremium ? 'border-accent bg-accent' : 'border-line'
+                  }`}
+                >
+                  {isPremium && <Check className="h-3 w-3 text-paper" />}
+                </span>
+                <span>
+                  <span className="block text-sm font-medium text-ink">Премиум</span>
+                  <span className="block text-xs text-ink-soft">
+                    Сниженная наценка — 3% в месяц вместо 3,8%
+                  </span>
+                </span>
+              </label>
+
               <div>
                 <label htmlFor="price" className="text-xs tracking-[0.1em] text-ink-soft uppercase">
                   Стоимость товара
@@ -279,7 +306,10 @@ export function Calculator() {
 
               <div className="mt-8 space-y-3 border-t border-paper/15 pt-6 text-sm">
                 <Row label="Стоимость товара" value={formatRub(result.price)} />
-                <Row label="Наценка" value={`+ ${formatRub(result.markupAmount)}`} />
+                <Row
+                  label={`Наценка (${isPremium ? '3' : '3,8'}%/мес.)`}
+                  value={`+ ${formatRub(result.markupAmount)}`}
+                />
                 <Row label="Итого с наценкой" value={formatRub(result.totalWithMarkup)} strong />
                 {mode === 'withDown' && (
                   <div className="animate-fade-in">
