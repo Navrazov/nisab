@@ -11,7 +11,7 @@ import { Footer } from './components/Footer'
 
 function App() {
   return (
-    <div className="min-h-screen bg-white transition-colors duration-300 dark:bg-[#0f1322]">
+    <div className="min-h-screen bg-paper transition-colors duration-300">
       <Header />
       <main>
         <Hero />

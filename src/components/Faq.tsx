@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { ChevronDown } from 'lucide-react'
 import { Container } from './ui/Container'
+import { Star8 } from './ui/Star8'
 
 const FAQ_ITEMS = [
   {
@@ -33,18 +33,16 @@ export function Faq() {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
-    <section id="faq" className="scroll-mt-20 py-16 sm:py-24">
+    <section id="faq" className="scroll-mt-20 border-b border-line py-16 sm:py-24">
       <Container>
-        <div className="max-w-2xl">
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand-400 dark:text-brand-300">
-            Частые вопросы
-          </span>
-          <h2 className="mt-3 font-serif text-3xl font-semibold text-brand-900 sm:text-4xl dark:text-white">
-            Всё о рассрочке NISAB
-          </h2>
+        <div className="mb-10 flex items-baseline justify-between border-b border-line pb-3">
+          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Услуга № 01 — 06</span>
+          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Вопросы</span>
         </div>
 
-        <div className="mt-10 divide-y divide-brand-100 rounded-2xl border border-brand-100 bg-white transition-colors duration-300 dark:divide-white/10 dark:border-white/10 dark:bg-white/5">
+        <h2 className="mb-10 font-serif text-3xl font-medium text-ink sm:text-4xl">Всё о рассрочке NISAB</h2>
+
+        <div className="divide-y divide-line border-t border-line">
           {FAQ_ITEMS.map((item, index) => {
             const isOpen = openIndex === index
             return (
@@ -53,22 +51,19 @@ export function Faq() {
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                   aria-expanded={isOpen}
-                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-200 hover:bg-brand-50/60 dark:hover:bg-white/5"
+                  className="flex w-full items-center justify-between gap-4 py-5 text-left"
                 >
-                  <span className="font-medium text-brand-900 dark:text-white">{item.question}</span>
-                  <ChevronDown
-                    className={`h-4 w-4 shrink-0 text-brand-400 transition-transform duration-300 dark:text-brand-300 ${
-                      isOpen ? 'rotate-180' : ''
-                    }`}
-                  />
+                  <span className="flex items-baseline gap-4">
+                    <Star8 className="h-2.5 w-2.5 shrink-0 text-accent" />
+                    <span className="font-serif text-lg font-medium text-ink">{item.question}</span>
+                  </span>
+                  <span className="shrink-0 text-lg text-ink-faint">{isOpen ? '−' : '+'}</span>
                 </button>
                 <div
                   className={`accordion-rows ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
                 >
                   <div className="overflow-hidden">
-                    <p className="px-6 pb-5 text-sm leading-relaxed text-brand-600 dark:text-brand-200">
-                      {item.answer}
-                    </p>
+                    <p className="max-w-2xl pb-5 pl-6 text-sm leading-relaxed text-ink-soft">{item.answer}</p>
                   </div>
                 </div>
               </div>

@@ -12,10 +12,13 @@ const ThemeContext = createContext<ThemeContextValue | null>(null)
 const STORAGE_KEY = 'nisab-theme'
 
 function getInitialTheme(): Theme {
-  if (typeof window === 'undefined') return 'light'
+  if (typeof window === 'undefined') return 'dark'
   const stored = window.localStorage.getItem(STORAGE_KEY)
   if (stored === 'light' || stored === 'dark') return stored
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  // Dark is the brand-primary mode — it's what the logo is designed for —
+  // so new visitors land there regardless of OS preference. The toggle
+  // still switches instantly and the choice is remembered from then on.
+  return 'dark'
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {

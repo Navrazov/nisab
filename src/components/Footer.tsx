@@ -1,6 +1,7 @@
-import { MessageCircle, Phone } from 'lucide-react'
 import { Container } from './ui/Container'
+import iconNavy from '../assets/icon-navy.png'
 import iconWhite from '../assets/icon-white.png'
+import { useTheme } from '../context/ThemeContext'
 import { PHONE_DISPLAY, PHONE_HREF, WHATSAPP_HREF } from '../lib/contacts'
 
 const LINKS = [
@@ -14,14 +15,16 @@ const LINKS = [
 ]
 
 export function Footer() {
+  const { theme } = useTheme()
+
   return (
-    <footer id="contacts" className="scroll-mt-20 bg-brand-900 pt-16 text-brand-200 transition-colors duration-300 dark:bg-black/40">
+    <footer id="contacts" className="scroll-mt-20 border-t border-line bg-paper-raised pt-16 text-ink-soft transition-colors duration-300">
       <Container>
-        <div className="grid gap-10 pb-12 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr]">
+        <div className="grid gap-10 border-b border-line pb-12 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr]">
           <div>
             <div className="flex items-center gap-3">
-              <img src={iconWhite} alt="NISAB" className="h-9 w-9" />
-              <span className="font-serif text-lg font-semibold tracking-wide text-white">NISAB</span>
+              <img src={theme === 'dark' ? iconWhite : iconNavy} alt="NISAB" className="h-8 w-8" />
+              <span className="font-serif text-lg italic text-ink">NISAB</span>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed">
               Рассрочка на любой товар без банка и скрытых процентов — прозрачная наценка,
@@ -30,11 +33,11 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-white">Навигация</h3>
+            <h3 className="text-xs tracking-[0.14em] text-ink-faint uppercase">Навигация</h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               {LINKS.map((link) => (
                 <li key={link.href}>
-                  <a href={link.href} className="transition-colors hover:text-white">
+                  <a href={link.href} className="transition-colors hover:text-accent">
                     {link.label}
                   </a>
                 </li>
@@ -43,29 +46,27 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-white">Контакты</h3>
-            <div className="mt-4 space-y-3 text-sm">
-              <a href={PHONE_HREF} className="flex items-center gap-2 transition-colors hover:text-white">
-                <Phone className="h-4 w-4" />
+            <h3 className="text-xs tracking-[0.14em] text-ink-faint uppercase">Контакты</h3>
+            <div className="mt-4 space-y-2.5 text-sm">
+              <a href={PHONE_HREF} className="block transition-colors hover:text-accent">
                 {PHONE_DISPLAY}
               </a>
-              <a href={WHATSAPP_HREF} target="_blank" rel="noreferrer" className="flex items-center gap-2 transition-colors hover:text-white">
-                <MessageCircle className="h-4 w-4" />
+              <a href={WHATSAPP_HREF} target="_blank" rel="noreferrer" className="block transition-colors hover:text-accent">
                 Написать в WhatsApp
               </a>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-white/10 py-6">
-          <p className="text-xs leading-relaxed text-brand-400">
+        <div className="py-6">
+          <p className="text-xs leading-relaxed text-ink-faint">
             NISAB — рассрочка и инвестиции. Не является кредитной или банковской организацией.
             Услуга оказывается на условиях договора купли-продажи товара с рассрочкой платежа.
             Информация на сайте, включая результаты калькулятора, носит справочный характер и
             не является публичной офертой (ст. 437 ГК РФ). Итоговые условия определяются
             договором при оформлении.
           </p>
-          <p className="mt-3 text-xs text-brand-500">© {new Date().getFullYear()} NISAB. Все права защищены.</p>
+          <p className="mt-3 text-xs text-ink-faint">© {new Date().getFullYear()} NISAB. Все права защищены.</p>
         </div>
       </Container>
     </footer>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Menu, Phone, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { Container } from './ui/Container'
+import { Star8 } from './ui/Star8'
 import { ThemeToggle } from './ThemeToggle'
 import iconNavy from '../assets/icon-navy.png'
 import iconWhite from '../assets/icon-white.png'
@@ -20,39 +21,36 @@ export function Header() {
   const { theme } = useTheme()
 
   return (
-    <header className="sticky top-0 z-50 border-b border-brand-100 bg-white/85 backdrop-blur-md transition-colors duration-300 dark:border-white/10 dark:bg-[#0f1322]/85">
-      <Container className="flex h-18 items-center justify-between py-3">
+    <header className="sticky top-0 z-50 border-b border-line bg-paper transition-colors duration-300">
+      <Container className="flex h-20 items-center justify-between">
         <a href="#top" className="flex items-center gap-3">
-          <img src={theme === 'dark' ? iconWhite : iconNavy} alt="NISAB" className="h-9 w-9" />
+          <img src={theme === 'dark' ? iconWhite : iconNavy} alt="NISAB" className="h-8 w-8" />
           <span className="flex flex-col leading-none">
-            <span className="font-serif text-lg font-semibold tracking-wide text-brand-900 dark:text-white">
-              NISAB
-            </span>
-            <span className="text-[9px] font-medium tracking-[0.18em] text-brand-500 dark:text-brand-300">
-              РАССРОЧКА · ИНВЕСТИЦИИ
+            <span className="font-serif text-xl italic text-ink">NISAB</span>
+            <span className="mt-1.5 flex items-center gap-1.5 text-[9px] tracking-[0.24em] text-ink-faint uppercase">
+              Рассрочка <Star8 className="h-2 w-2" /> Инвестиции
             </span>
           </span>
         </a>
 
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav className="hidden items-center gap-8 lg:flex">
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-brand-600 transition-colors duration-200 hover:text-brand-900 dark:text-brand-200 dark:hover:text-white"
+              className="border-b border-transparent pb-0.5 text-xs tracking-[0.1em] text-ink-soft uppercase transition-colors duration-200 hover:border-accent hover:text-ink"
             >
               {link.label}
             </a>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-4 lg:flex">
+        <div className="hidden items-center gap-5 lg:flex">
           <ThemeToggle />
           <a
             href={PHONE_HREF}
-            className="inline-flex items-center gap-2 rounded-full bg-brand-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-brand-800 dark:bg-white dark:text-brand-900 dark:hover:bg-brand-100"
+            className="rounded-sm border border-ink px-4 py-2 text-xs tracking-[0.06em] text-ink transition-colors duration-200 hover:bg-ink hover:text-paper"
           >
-            <Phone className="h-4 w-4" />
             {PHONE_DISPLAY}
           </a>
         </div>
@@ -64,27 +62,27 @@ export function Header() {
             onClick={() => setOpen((v) => !v)}
             aria-label="Открыть меню"
             aria-expanded={open}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-brand-200 text-brand-700 transition-colors duration-200 dark:border-white/15 dark:text-white"
+            className="flex h-9 w-9 items-center justify-center rounded-sm border border-line text-ink transition-colors duration-200"
           >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
         </div>
       </Container>
 
       <div
-        className={`accordion-rows border-brand-100 bg-white lg:hidden dark:border-white/10 dark:bg-[#0f1322] ${
+        className={`accordion-rows border-line bg-paper lg:hidden ${
           open ? 'grid-rows-[1fr] border-t opacity-100' : 'grid-rows-[0fr] border-t-0 opacity-0'
         }`}
       >
         <div className="overflow-hidden">
           <div className="px-5 pb-6 pt-2">
-            <nav className="flex flex-col gap-1">
+            <nav className="flex flex-col divide-y divide-line">
               {NAV_LINKS.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-3 text-sm font-medium text-brand-700 transition-colors duration-200 hover:bg-brand-50 dark:text-brand-100 dark:hover:bg-white/5"
+                  className="py-3.5 text-xs tracking-[0.1em] text-ink-soft uppercase transition-colors duration-200 hover:text-accent"
                 >
                   {link.label}
                 </a>
@@ -92,9 +90,8 @@ export function Header() {
             </nav>
             <a
               href={PHONE_HREF}
-              className="mt-4 flex items-center justify-center gap-2 rounded-full bg-brand-900 px-4 py-3 text-sm font-semibold text-white transition-colors duration-200 dark:bg-white dark:text-brand-900"
+              className="mt-4 flex items-center justify-center rounded-sm border border-ink py-3 text-xs tracking-[0.06em] text-ink"
             >
-              <Phone className="h-4 w-4" />
               {PHONE_DISPLAY}
             </a>
           </div>

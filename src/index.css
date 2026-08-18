@@ -1,23 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+/* Cormorant Garamond + IBM Plex Sans are loaded via a render-blocking <link>
+   in index.html, not @import here — @import would only be discovered after
+   the app's own bundled stylesheet finishes loading, adding a full extra
+   round-trip. During that gap, an anchor click (scroll-behavior: smooth)
+   could start scrolling before the fonts swap in, and the resulting reflow
+   would land the page short by roughly one header-height. */
 @import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: 'Cormorant Garamond', ui-serif, Georgia, serif;
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-  --color-brand-50: #f5f6fa;
-  --color-brand-100: #e7e9f2;
-  --color-brand-200: #c9cee2;
-  --color-brand-300: #a3abc8;
-  --color-brand-400: #7883ab;
-  --color-brand-500: #57628f;
-  --color-brand-600: #414c74;
-  --color-brand-700: #333c5e;
-  --color-brand-800: #262d48;
-  --color-brand-900: #1a2036;
-  --color-brand-950: #0c0f1c;
+  /* semantic tokens — redefined under .dark below, so components reference
+     these names directly (bg-paper, text-ink, border-line…) with no dark:
+     prefix needed. Dark is the brand-primary mode (mirrors the logo's own
+     white-on-black presentation); light is the secondary, inverted mode. */
+  --color-paper: #f5f3ef;
+  --color-paper-raised: #ece6d9;
+  --color-ink: #0f0e0c;
+  --color-ink-soft: #57503e;
+  --color-ink-faint: #8d8670;
+  --color-line: #dcd5c4;
+
+  /* brass accent, page-level use (against the current page background) */
+  --color-accent: #8a6a3c;
+  /* brass accent, inverted-panel use (against a stamp panel — see below,
+     always the opposite tone of --color-accent so it stays legible when
+     the stamp's fill flips relative to the page) */
+  --color-accent-invert: #c9a063;
+}
+
+.dark {
+  --color-paper: #0a0a08;
+  --color-paper-raised: #141210;
+  --color-ink: #f5f3ef;
+  --color-ink-soft: #b7b0a0;
+  --color-ink-faint: #6e6858;
+  --color-line: #262319;
+
+  --color-accent: #c9a063;
+  --color-accent-invert: #8a6a3c;
+  color-scheme: dark;
 }
 
 html {
@@ -26,19 +50,19 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: #ffffff;
-  color: var(--color-brand-900);
+  background-color: var(--color-paper);
+  color: var(--color-ink);
   transition: background-color 300ms ease, color 300ms ease;
 }
 
-.dark body {
-  background-color: #0f1322;
-  color: #f2f3f8;
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-paper);
 }
 
-::selection {
-  background-color: var(--color-brand-800);
-  color: white;
+.font-tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
 }
 
 @keyframes fade-in {
@@ -61,70 +85,57 @@ body {
   transition: grid-template-rows 280ms ease, opacity 280ms ease;
 }
 
-/* custom range slider */
+/* thin-line range slider, small precise dot thumb in brass — no shadows */
 input[type='range'].nisab-slider {
   -webkit-appearance: none;
   appearance: none;
-  height: 6px;
-  border-radius: 9999px;
-  background: linear-gradient(to right, var(--color-brand-800) 0%, var(--color-brand-800) var(--fill, 50%), var(--color-brand-200) var(--fill, 50%), var(--color-brand-200) 100%);
+  height: 1px;
+  border-radius: 0;
+  background: linear-gradient(
+    to right,
+    var(--color-ink) 0%,
+    var(--color-ink) var(--fill, 50%),
+    var(--color-line) var(--fill, 50%),
+    var(--color-line) 100%
+  );
   outline: none;
   transition: background 250ms ease;
-}
-
-.dark input[type='range'].nisab-slider {
-  background: linear-gradient(to right, #ffffff 0%, #ffffff var(--fill, 50%), var(--color-brand-700) var(--fill, 50%), var(--color-brand-700) 100%);
 }
 
 input[type='range'].nisab-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 9999px;
-  background: var(--color-brand-900);
-  border: 3px solid white;
-  box-shadow: 0 1px 4px rgba(16, 20, 35, 0.35);
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--color-accent);
   cursor: pointer;
   margin-top: 0;
-  transition: transform 150ms ease, box-shadow 150ms ease, background-color 250ms ease, border-color 250ms ease;
+  transition: transform 150ms ease, background-color 250ms ease;
 }
 
 input[type='range'].nisab-slider:hover::-webkit-slider-thumb {
-  transform: scale(1.1);
+  transform: scale(1.35);
 }
 
 input[type='range'].nisab-slider:active::-webkit-slider-thumb {
-  transform: scale(1.15);
-  box-shadow: 0 2px 8px rgba(16, 20, 35, 0.45);
-}
-
-.dark input[type='range'].nisab-slider::-webkit-slider-thumb {
-  background: #ffffff;
-  border: 3px solid var(--color-brand-900);
+  transform: scale(1.55);
 }
 
 input[type='range'].nisab-slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  border-radius: 9999px;
-  background: var(--color-brand-900);
-  border: 3px solid white;
-  box-shadow: 0 1px 4px rgba(16, 20, 35, 0.35);
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-accent);
   cursor: pointer;
-  transition: transform 150ms ease, box-shadow 150ms ease, background-color 250ms ease, border-color 250ms ease;
+  transition: transform 150ms ease, background-color 250ms ease;
 }
 
 input[type='range'].nisab-slider:hover::-moz-range-thumb {
-  transform: scale(1.1);
+  transform: scale(1.35);
 }
 
 input[type='range'].nisab-slider:active::-moz-range-thumb {
-  transform: scale(1.15);
-  box-shadow: 0 2px 8px rgba(16, 20, 35, 0.45);
-}
-
-.dark input[type='range'].nisab-slider::-moz-range-thumb {
-  background: #ffffff;
-  border: 3px solid var(--color-brand-900);
+  transform: scale(1.55);
 }

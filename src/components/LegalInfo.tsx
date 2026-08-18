@@ -1,46 +1,42 @@
 import { Container } from './ui/Container'
+import { Star8 } from './ui/Star8'
+
+const LEGAL_POINTS = [
+  {
+    title: 'Рассрочка, а не кредит',
+    text: 'Услуга оформляется как рассрочка платежа по договору купли-продажи товара (ст. 489 Гражданского кодекса РФ), а не как заём или потребительский кредит. Действие Федерального закона от 21.12.2013 № 353-ФЗ «О потребительском кредите (займе)» на такие договоры не распространяется.',
+  },
+  {
+    title: 'Наценка вместо процента',
+    text: 'В основе расчёта — фиксированная торговая наценка на стоимость товара, а не ссудный процент. Такой подход соответствует принципам исламских финансов (отказ от риба) и заранее известен клиенту до подписания договора.',
+  },
+  {
+    title: 'Персональные данные',
+    text: 'Обработка персональных данных клиентов осуществляется в соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных». Согласие на обработку данных запрашивается при подаче заявки.',
+  },
+]
 
 export function LegalInfo() {
   return (
-    <section id="legal" className="scroll-mt-20 border-t border-brand-100 bg-brand-50/60 py-16 transition-colors duration-300 sm:py-24 dark:border-white/10 dark:bg-white/[0.03]">
+    <section id="legal" className="scroll-mt-20 bg-paper-raised py-16 transition-colors duration-300 sm:py-24">
       <Container>
-        <div className="max-w-2xl">
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand-400 dark:text-brand-300">
-            Важно знать
-          </span>
-          <h2 className="mt-3 font-serif text-3xl font-semibold text-brand-900 sm:text-4xl dark:text-white">
-            Правовая информация
-          </h2>
+        <div className="mb-10 flex items-baseline justify-between border-b border-line pb-3">
+          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Услуга № 01 — 07</span>
+          <span className="text-xs tracking-[0.16em] text-ink-faint uppercase">Важно знать</span>
         </div>
 
-        <div className="mt-10 grid gap-5 text-sm leading-relaxed text-brand-600 sm:grid-cols-3 dark:text-brand-200">
-          <div className="rounded-2xl border border-brand-100 bg-white p-6 transition-colors duration-300 dark:border-white/10 dark:bg-brand-900/40">
-            <h3 className="font-semibold text-brand-900 dark:text-white">Рассрочка, а не кредит</h3>
-            <p className="mt-2">
-              Услуга оформляется как рассрочка платежа по договору купли-продажи товара
-              (ст. 489 Гражданского кодекса РФ), а не как заём или потребительский кредит.
-              Действие Федерального закона от 21.12.2013 № 353-ФЗ «О потребительском кредите
-              (займе)» на такие договоры не распространяется.
-            </p>
-          </div>
+        <h2 className="mb-12 font-serif text-3xl font-medium text-ink sm:text-4xl">Правовая информация</h2>
 
-          <div className="rounded-2xl border border-brand-100 bg-white p-6 transition-colors duration-300 dark:border-white/10 dark:bg-brand-900/40">
-            <h3 className="font-semibold text-brand-900 dark:text-white">Наценка вместо процента</h3>
-            <p className="mt-2">
-              В основе расчёта — фиксированная торговая наценка на стоимость товара, а не
-              ссудный процент. Такой подход соответствует принципам исламских финансов (отказ
-              от риба) и заранее известен клиенту до подписания договора.
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-brand-100 bg-white p-6 transition-colors duration-300 dark:border-white/10 dark:bg-brand-900/40">
-            <h3 className="font-semibold text-brand-900 dark:text-white">Персональные данные</h3>
-            <p className="mt-2">
-              Обработка персональных данных клиентов осуществляется в соответствии с
-              Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных». Согласие на
-              обработку данных запрашивается при подаче заявки.
-            </p>
-          </div>
+        <div className="divide-y divide-line border-t border-line">
+          {LEGAL_POINTS.map((point) => (
+            <div key={point.title} className="grid gap-2 py-6 sm:grid-cols-12 sm:gap-6">
+              <div className="flex items-baseline gap-3 sm:col-span-4">
+                <Star8 className="h-2.5 w-2.5 shrink-0 translate-y-[-2px] text-accent" />
+                <h3 className="font-serif text-lg font-medium text-ink">{point.title}</h3>
+              </div>
+              <p className="text-sm leading-relaxed text-ink-soft sm:col-span-8">{point.text}</p>
+            </div>
+          ))}
         </div>
       </Container>
     </section>
