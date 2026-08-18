@@ -1,0 +1,52 @@
+name: Deploy to Yandex Cloud
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      # Yandex Object Storage is S3-compatible, so the standard AWS CLI
+      # (preinstalled on GitHub-hosted runners) works against it directly —
+      # just point it at the Yandex endpoint instead of AWS's.
+      - name: Sync dist/ to Yandex Object Storage
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.YC_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.YC_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ru-central1
+        run: |
+          aws --endpoint-url=https://storage.yandexcloud.net \
+            s3 sync dist/ "s3://${{ secrets.YC_BUCKET_NAME }}" --delete
+
+      # Optional: purge the CDN cache so the new build is live immediately
+      # instead of waiting out the cache TTL. Skipped automatically if the
+      # CDN secrets haven't been set up yet.
+      - name: Purge Yandex CDN cache
+        if: ${{ secrets.YC_OAUTH_TOKEN != '' && secrets.YC_CDN_RESOURCE_ID != '' }}
+        continue-on-error: true
+        env:
+          YC_OAUTH_TOKEN: ${{ secrets.YC_OAUTH_TOKEN }}
+          YC_CDN_RESOURCE_ID: ${{ secrets.YC_CDN_RESOURCE_ID }}
+        run: |
+          IAM_TOKEN=$(curl -sf -X POST \
+            -H "Content-Type: application/json" \
+            -d "{\"yandexPassportOauthToken\":\"$YC_OAUTH_TOKEN\"}" \
+            https://iam.api.cloud.yandex.net/iam/v1/tokens | jq -r .iamToken)
+          curl -sf -X POST \
+            -H "Authorization: Bearer $IAM_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"cdn_resource_id\":\"$YC_CDN_RESOURCE_ID\",\"type\":\"FULL\"}" \
+            https://cdn.api.cloud.yandex.net/cdn/v1/cache:purge
