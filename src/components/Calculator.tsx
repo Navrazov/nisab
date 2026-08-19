@@ -146,6 +146,15 @@ export function Calculator() {
     restoreCursor(formatted)
   }
 
+  function handleDownAmountStep(direction: 1 | -1) {
+    const total = result.totalWithMarkup
+    const next = Math.min(
+      downAmountBounds.max,
+      Math.max(downAmountBounds.min, result.downPaymentAmount + direction * PRICE_STEP),
+    )
+    setDownPercent(total > 0 ? (next / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
+  }
+
   function handleDownAmountBlur() {
     // Don't set the display value here — let the sync effect pick up
     // `result.downPaymentPercent`, which is already clamped and rounded to
@@ -274,8 +283,8 @@ export function Calculator() {
                   />
                 </div>
                 <div className="mt-2 flex justify-between text-[11px] text-ink-faint">
-                  <span>3 мес.</span>
-                  <span>12 мес.</span>
+                  <span>{MIN_MONTHS} мес.</span>
+                  <span>{MAX_MONTHS} мес.</span>
                 </div>
               </div>
 
@@ -287,17 +296,39 @@ export function Calculator() {
                     </label>
                     <span className="font-tabular text-sm font-bold text-ink">{roundedDownPercent}%</span>
                   </div>
-                  <div className="mt-3 flex items-center gap-2 rounded-sm border border-line px-4 py-3 transition-colors duration-200 focus-within:border-ink">
-                    <input
-                      id="downAmount"
-                      ref={downAmountCursor.ref}
-                      inputMode="numeric"
-                      value={downAmountInput}
-                      onChange={handleDownAmountChange}
-                      onBlur={handleDownAmountBlur}
-                      className="font-tabular w-full bg-transparent text-2xl font-bold text-ink outline-none"
-                    />
-                    <span className="text-lg text-ink-faint">₽</span>
+                  <div className="mt-3 flex items-stretch gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleDownAmountStep(-1)}
+                      disabled={result.downPaymentAmount <= downAmountBounds.min}
+                      aria-label={`Уменьшить на ${PRICE_STEP} ₽`}
+                      className="flex w-11 shrink-0 items-center justify-center rounded-sm border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </button>
+
+                    <div className="flex flex-1 items-center gap-2 rounded-sm border border-line px-4 py-3 transition-colors duration-200 focus-within:border-ink">
+                      <input
+                        id="downAmount"
+                        ref={downAmountCursor.ref}
+                        inputMode="numeric"
+                        value={downAmountInput}
+                        onChange={handleDownAmountChange}
+                        onBlur={handleDownAmountBlur}
+                        className="font-tabular w-full bg-transparent text-2xl font-bold text-ink outline-none"
+                      />
+                      <span className="text-lg text-ink-faint">₽</span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDownAmountStep(1)}
+                      disabled={result.downPaymentAmount >= downAmountBounds.max}
+                      aria-label={`Увеличить на ${PRICE_STEP} ₽`}
+                      className="flex w-11 shrink-0 items-center justify-center rounded-sm border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
                   </div>
                   <div className="mt-5">
                     <Slider

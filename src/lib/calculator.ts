@@ -6,7 +6,7 @@ export const MAX_PRICE = 1000000
 export const DEFAULT_PRICE = 50000
 export const PRICE_STEP = 500
 
-export const MIN_MONTHS = 3
+export const MIN_MONTHS = 1
 export const MAX_MONTHS = 12
 export const DEFAULT_MONTHS = 6
 
