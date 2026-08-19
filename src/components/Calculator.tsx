@@ -360,7 +360,7 @@ export function Calculator() {
 
             <div className="flex flex-col bg-ink p-6 text-paper transition-colors duration-300 sm:p-8">
               <p className="text-xs tracking-[0.16em] text-paper/50 uppercase">Ежемесячный платёж</p>
-              <p className="font-tabular font-serif mt-2 text-6xl leading-none font-black text-accent-invert">
+              <p className="font-tabular mt-2 text-6xl leading-none font-black text-accent-invert">
                 {formatRub(result.monthlyPayment)}
               </p>
               <p className="mt-2 text-xs text-paper/50">в течение {result.months} месяцев</p>
