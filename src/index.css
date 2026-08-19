@@ -32,14 +32,14 @@
 }
 
 .dark {
-  /* deep navy, not black — matches the logo's own background rather than
-     a generic dark-mode near-black */
-  --color-paper: #0a1220;
-  --color-paper-raised: #121e32;
-  --color-ink: #f3f4f8;
-  --color-ink-soft: #b3bacb;
-  --color-ink-faint: #69718a;
-  --color-line: #223050;
+  /* the exact navy sampled from the NISAB flyer background (#282e3d),
+     not a generic dark-mode near-black */
+  --color-paper: #282e3d;
+  --color-paper-raised: #323951;
+  --color-ink: #f5f5f7;
+  --color-ink-soft: #b9bed1;
+  --color-ink-faint: #7d84a0;
+  --color-line: #454e68;
 
   --color-accent: #c9a063;
   --color-accent-invert: #8a6a3c;

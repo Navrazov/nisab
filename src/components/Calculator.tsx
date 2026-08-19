@@ -48,25 +48,42 @@ export function Calculator() {
   const effectiveDownPercent = mode === 'noDown' ? 0 : downPercent
   const monthlyMarkupRate = isPremium ? PREMIUM_MONTHLY_MARKUP_RATE : STANDARD_MONTHLY_MARKUP_RATE
 
-  const result = useMemo(
+  const rawResult = useMemo(
     () => calculate(price, months, effectiveDownPercent, monthlyMarkupRate),
     [price, months, effectiveDownPercent, monthlyMarkupRate],
   )
-
-  const roundedDownPercent = Math.round(result.downPaymentPercent)
 
   // The down-payment slider drags across round ruble amounts (like the
   // price slider), not raw percent — the bounds are the min/max allowed
   // percent converted to rubles and snapped to the nearest step so every
   // reachable position is a round number.
   const downAmountBounds = useMemo(() => {
-    const total = result.totalWithMarkup
+    const total = rawResult.totalWithMarkup
     const rawMin = total * (MIN_DOWN_PAYMENT_PERCENT / 100)
     const rawMax = total * (MAX_DOWN_PAYMENT_PERCENT / 100)
     const min = Math.ceil(rawMin / PRICE_STEP) * PRICE_STEP
     const max = Math.floor(rawMax / PRICE_STEP) * PRICE_STEP
     return { min, max: Math.max(min, max) }
-  }, [result.totalWithMarkup])
+  }, [rawResult.totalWithMarkup])
+
+  // The down payment itself (not just the slider's visual position) is
+  // snapped to a round ruble amount before it feeds monthly payment, the
+  // breakdown panel and the slider — otherwise the browser's own range-input
+  // sanitization silently rounds the slider for display while every other
+  // number on the page keeps showing the raw, unrounded figure, so the
+  // thumb and the numbers disagree and appear to jump around as price
+  // changes.
+  const result = useMemo(() => {
+    if (mode === 'noDown' || rawResult.totalWithMarkup <= 0) return rawResult
+    const total = rawResult.totalWithMarkup
+    const roundedAmount = Math.min(
+      downAmountBounds.max,
+      Math.max(downAmountBounds.min, Math.round(rawResult.downPaymentAmount / PRICE_STEP) * PRICE_STEP),
+    )
+    return calculate(price, months, (roundedAmount / total) * 100, monthlyMarkupRate)
+  }, [rawResult, mode, downAmountBounds, price, months, monthlyMarkupRate])
+
+  const roundedDownPercent = Math.round(result.downPaymentPercent)
 
   // Keep the amount field in sync whenever price, term or the percent slider
   // change it from elsewhere — but skip it right after the amount field's
@@ -130,15 +147,11 @@ export function Calculator() {
   }
 
   function handleDownAmountBlur() {
-    const total = result.totalWithMarkup
-    const minAmount = total * (MIN_DOWN_PAYMENT_PERCENT / 100)
-    const maxAmount = total * (MAX_DOWN_PAYMENT_PERCENT / 100)
-    const currentAmount = total * (downPercent / 100)
-    const clamped = Math.min(maxAmount, Math.max(minAmount, currentAmount || minAmount))
-
-    skipDownAmountSyncRef.current = true
-    setDownPercent(total > 0 ? (clamped / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
-    setDownAmountInput(formatNumber(clamped))
+    // Don't set the display value here — let the sync effect pick up
+    // `result.downPaymentPercent`, which is already clamped and rounded to
+    // the nearest step, so the field always settles on the same number the
+    // slider and the breakdown panel show.
+    setDownPercent(result.downPaymentPercent)
   }
 
   return (
