@@ -169,7 +169,7 @@ export function Calculator() {
 
         <div className="rounded-md border border-line">
           <div className="grid lg:grid-cols-2 lg:divide-x lg:divide-line">
-            <div className="space-y-10 p-6 sm:p-8">
+            <div className="space-y-6 p-6 sm:p-8">
               <label className="flex cursor-pointer items-start gap-3 rounded-md border border-line p-4 transition-colors duration-200 hover:border-ink">
                 <input
                   type="checkbox"
@@ -339,6 +339,8 @@ export function Calculator() {
                 Расчёт носит справочный характер. Итоговые условия фиксируются в договоре
                 купли-продажи с рассрочкой платежа и могут уточняться менеджером.
               </p>
+
+              <div className="flex-1" />
 
               <a
                 href={requestHref}
