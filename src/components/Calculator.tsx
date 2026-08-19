@@ -324,7 +324,7 @@ export function Calculator() {
               </p>
               <p className="mt-2 text-xs text-ink-faint">в течение {result.months} месяцев</p>
 
-              <div className="mt-8 space-y-3 border-t border-line pt-6 text-sm">
+              <div className="mt-4 space-y-3 border-t border-line pt-6 text-sm">
                 <Row label="Стоимость товара" value={formatRub(result.price)} />
                 <Row label="Наценка" value={`+ ${formatRub(result.markupAmount)}`} />
                 <Row label="Итого с наценкой" value={formatRub(result.totalWithMarkup)} strong />
