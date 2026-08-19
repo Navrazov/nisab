@@ -26,7 +26,7 @@ export function Header() {
           <span className="flex flex-col leading-none">
             <span className="font-serif text-2xl font-bold italic text-ink">NISAB</span>
             <span className="mt-1.5 flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.22em] text-ink-faint uppercase">
-              Рассрочка <Star8 className="h-2 w-2" /> Инвестиции
+              <Star8 className="h-2 w-2" /> Исламская рассрочка
             </span>
           </span>
         </a>

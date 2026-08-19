@@ -61,14 +61,7 @@ export function Footer() {
         </div>
 
         <div className="py-6">
-          <p className="text-xs leading-relaxed text-ink-faint">
-            NISAB — рассрочка и инвестиции. Не является кредитной или банковской организацией.
-            Услуга оказывается на условиях договора купли-продажи товара с рассрочкой платежа.
-            Информация на сайте, включая результаты калькулятора, носит справочный характер и
-            не является публичной офертой (ст. 437 ГК РФ). Итоговые условия определяются
-            договором при оформлении.
-          </p>
-          <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
             {LEGAL_LINKS.map((link) => (
               <a
                 key={link.href}

@@ -155,7 +155,7 @@ export function Calculator() {
   }
 
   return (
-    <section id="calculator" className="scroll-mt-20 border-b border-line py-16 sm:py-24">
+    <section id="calculator" className="scroll-mt-20 border-b border-line pt-10 pb-16 sm:pt-14 sm:pb-24">
       <Container>
         <div className="mb-10 max-w-2xl">
           <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
