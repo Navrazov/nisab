@@ -24,7 +24,7 @@ export function Header() {
         <a href="#calculator" className="flex items-center gap-3">
           <img src={theme === 'dark' ? iconWhite : iconNavy} alt="NISAB" className="h-12 w-12" />
           <span className="flex flex-col leading-none">
-            <span className="font-serif text-2xl font-bold italic text-ink">NISAB</span>
+            <span className="font-sans text-2xl font-bold tracking-wide text-ink">NISAB</span>
             <span className="mt-1.5 flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.22em] text-ink-faint uppercase">
               <Star8 className="h-2 w-2" /> Исламская рассрочка
             </span>
@@ -48,7 +48,7 @@ export function Header() {
             <ThemeToggle />
             <a
               href={PHONE_HREF}
-              className="whitespace-nowrap rounded-sm border border-ink px-4 py-2 text-xs font-semibold tracking-[0.06em] text-ink transition-colors duration-200 hover:bg-ink hover:text-paper"
+              className="whitespace-nowrap rounded-md border border-ink px-4 py-2 text-xs font-semibold tracking-[0.06em] text-ink transition-colors duration-200 hover:bg-ink hover:text-paper"
             >
               {PHONE_DISPLAY}
             </a>
@@ -62,7 +62,7 @@ export function Header() {
             onClick={() => setOpen((v) => !v)}
             aria-label="Открыть меню"
             aria-expanded={open}
-            className="flex h-9 w-9 items-center justify-center rounded-sm border border-line text-ink transition-colors duration-200"
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-line text-ink transition-colors duration-200"
           >
             {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -90,7 +90,7 @@ export function Header() {
             </nav>
             <a
               href={PHONE_HREF}
-              className="mt-4 flex items-center justify-center rounded-sm border border-ink py-3 text-xs font-semibold tracking-[0.06em] text-ink"
+              className="mt-4 flex items-center justify-center rounded-md border border-ink py-3 text-xs font-semibold tracking-[0.06em] text-ink"
             >
               {PHONE_DISPLAY}
             </a>

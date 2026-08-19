@@ -155,7 +155,7 @@ export function Calculator() {
   }
 
   return (
-    <section id="calculator" className="scroll-mt-20 border-b border-line pt-10 pb-16 sm:pt-14 sm:pb-24">
+    <section id="calculator" className="scroll-mt-20 border-b border-line pt-10 pb-8 sm:pt-14 sm:pb-24">
       <Container>
         <div className="mb-10 max-w-2xl">
           <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
@@ -167,10 +167,10 @@ export function Calculator() {
           </p>
         </div>
 
-        <div className="rounded-sm border border-line">
+        <div className="rounded-md border border-line">
           <div className="grid lg:grid-cols-2 lg:divide-x lg:divide-line">
             <div className="space-y-10 p-6 sm:p-8">
-              <label className="flex cursor-pointer items-start gap-3 rounded-sm border border-line p-4 transition-colors duration-200 hover:border-ink">
+              <label className="flex cursor-pointer items-start gap-3 rounded-md border border-line p-4 transition-colors duration-200 hover:border-ink">
                 <input
                   type="checkbox"
                   checked={isPremium}
@@ -178,7 +178,7 @@ export function Calculator() {
                   className="sr-only"
                 />
                 <span
-                  className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border transition-colors duration-200 ${
+                  className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-md border transition-colors duration-200 ${
                     isPremium ? 'border-accent bg-accent' : 'border-line'
                   }`}
                 >
@@ -200,12 +200,12 @@ export function Calculator() {
                     onClick={() => handlePriceStep(-1)}
                     disabled={price <= MIN_PRICE}
                     aria-label={`Уменьшить на ${PRICE_STEP} ₽`}
-                    className="flex w-11 shrink-0 items-center justify-center rounded-sm border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
+                    className="flex w-11 shrink-0 items-center justify-center rounded-md border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
                   >
                     <Minus className="h-4 w-4" />
                   </button>
 
-                  <div className="flex flex-1 items-center gap-2 rounded-sm border border-line px-4 py-3 transition-colors duration-200 focus-within:border-ink">
+                  <div className="flex flex-1 items-center gap-2 rounded-md border border-line px-4 py-2 transition-colors duration-200 focus-within:border-ink">
                     <input
                       id="price"
                       ref={priceCursor.ref}
@@ -213,7 +213,7 @@ export function Calculator() {
                       value={priceInput}
                       onChange={handlePriceChange}
                       onBlur={handlePriceBlur}
-                      className="font-tabular w-full bg-transparent text-2xl font-bold text-ink outline-none"
+                      className="font-tabular w-full bg-transparent text-xl font-bold text-ink outline-none"
                     />
                     <span className="text-lg text-ink-faint">₽</span>
                   </div>
@@ -223,7 +223,7 @@ export function Calculator() {
                     onClick={() => handlePriceStep(1)}
                     disabled={price >= MAX_PRICE}
                     aria-label={`Увеличить на ${PRICE_STEP} ₽`}
-                    className="flex w-11 shrink-0 items-center justify-center rounded-sm border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
+                    className="flex w-11 shrink-0 items-center justify-center rounded-md border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
                   >
                     <Plus className="h-4 w-4" />
                   </button>
@@ -258,10 +258,6 @@ export function Calculator() {
                     ariaLabel="Срок рассрочки в месяцах"
                   />
                 </div>
-                <div className="mt-2 flex justify-between text-[11px] text-ink-faint">
-                  <span>{MIN_MONTHS} мес.</span>
-                  <span>{MAX_MONTHS} мес.</span>
-                </div>
               </div>
 
               <div>
@@ -277,12 +273,12 @@ export function Calculator() {
                     onClick={() => handleDownAmountStep(-1)}
                     disabled={result.downPaymentAmount <= downAmountBounds.min}
                     aria-label={`Уменьшить на ${PRICE_STEP} ₽`}
-                    className="flex w-11 shrink-0 items-center justify-center rounded-sm border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
+                    className="flex w-11 shrink-0 items-center justify-center rounded-md border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
                   >
                     <Minus className="h-4 w-4" />
                   </button>
 
-                  <div className="flex flex-1 items-center gap-2 rounded-sm border border-line px-4 py-3 transition-colors duration-200 focus-within:border-ink">
+                  <div className="flex flex-1 items-center gap-2 rounded-md border border-line px-4 py-2 transition-colors duration-200 focus-within:border-ink">
                     <input
                       id="downAmount"
                       ref={downAmountCursor.ref}
@@ -290,7 +286,7 @@ export function Calculator() {
                       value={downAmountInput}
                       onChange={handleDownAmountChange}
                       onBlur={handleDownAmountBlur}
-                      className="font-tabular w-full bg-transparent text-2xl font-bold text-ink outline-none"
+                      className="font-tabular w-full bg-transparent text-xl font-bold text-ink outline-none"
                     />
                     <span className="text-lg text-ink-faint">₽</span>
                   </div>
@@ -300,7 +296,7 @@ export function Calculator() {
                     onClick={() => handleDownAmountStep(1)}
                     disabled={result.downPaymentAmount >= downAmountBounds.max}
                     aria-label={`Увеличить на ${PRICE_STEP} ₽`}
-                    className="flex w-11 shrink-0 items-center justify-center rounded-sm border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
+                    className="flex w-11 shrink-0 items-center justify-center rounded-md border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
                   >
                     <Plus className="h-4 w-4" />
                   </button>
@@ -318,16 +314,12 @@ export function Calculator() {
                     ariaLabel="Первый взнос"
                   />
                 </div>
-                <div className="mt-2 flex justify-between text-[11px] text-ink-faint">
-                  <span>{MIN_DOWN_PAYMENT_PERCENT}%</span>
-                  <span>{MAX_DOWN_PAYMENT_PERCENT}%</span>
-                </div>
               </div>
             </div>
 
             <div className="flex flex-col bg-paper-raised p-6 text-ink transition-colors duration-300 sm:p-8">
               <p className="text-xs tracking-[0.16em] text-ink-faint uppercase">Ежемесячный платёж</p>
-              <p className="font-tabular mt-2 text-6xl leading-none font-black text-accent dark:text-ink">
+              <p className="font-tabular mt-2 text-6xl leading-none font-bold text-accent dark:text-ink">
                 {formatRub(result.monthlyPayment)}
               </p>
               <p className="mt-2 text-xs text-ink-faint">в течение {result.months} месяцев</p>
@@ -352,7 +344,7 @@ export function Calculator() {
                 href={requestHref}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-6 flex items-center justify-center rounded-sm bg-accent py-3.5 text-xs font-bold tracking-[0.1em] text-paper uppercase transition-opacity duration-200 hover:opacity-85"
+                className="mt-6 flex items-center justify-center rounded-md bg-accent py-3.5 text-xs font-bold tracking-[0.1em] text-paper uppercase transition-opacity duration-200 hover:opacity-85"
               >
                 Оставить заявку
               </a>

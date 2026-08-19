@@ -26,7 +26,7 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-3">
               <img src={theme === 'dark' ? iconWhite : iconNavy} alt="NISAB" className="h-8 w-8" />
-              <span className="font-serif text-lg italic text-ink">NISAB</span>
+              <span className="font-sans text-lg font-bold tracking-wide text-ink">NISAB</span>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed">
               Рассрочка на любой товар без банка и скрытых процентов — прозрачная наценка,

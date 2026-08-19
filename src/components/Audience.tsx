@@ -42,7 +42,7 @@ export function Audience() {
             href={WHATSAPP_HREF}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex shrink-0 items-center justify-center rounded-sm bg-accent px-6 py-3.5 text-xs tracking-[0.1em] text-paper uppercase transition-opacity duration-200 hover:opacity-85"
+            className="inline-flex shrink-0 items-center justify-center rounded-md bg-accent px-6 py-3.5 text-xs tracking-[0.1em] text-paper uppercase transition-opacity duration-200 hover:opacity-85"
           >
             Обсудить сотрудничество
           </a>

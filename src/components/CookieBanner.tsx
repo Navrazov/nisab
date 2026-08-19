@@ -32,14 +32,14 @@ export function CookieBanner() {
           <button
             type="button"
             onClick={() => respond('declined')}
-            className="rounded-sm border border-line px-4 py-2 text-xs font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors duration-200 hover:border-ink hover:text-ink"
+            className="rounded-md border border-line px-4 py-2 text-xs font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors duration-200 hover:border-ink hover:text-ink"
           >
             Отклонить
           </button>
           <button
             type="button"
             onClick={() => respond('accepted')}
-            className="rounded-sm border border-accent bg-accent px-4 py-2 text-xs font-semibold tracking-[0.06em] text-paper uppercase transition-colors duration-200 hover:opacity-90"
+            className="rounded-md border border-accent bg-accent px-4 py-2 text-xs font-semibold tracking-[0.06em] text-paper uppercase transition-colors duration-200 hover:opacity-90"
           >
             Принять
           </button>
