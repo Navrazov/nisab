@@ -12,7 +12,6 @@ const NAV_LINKS = [
   { href: '#calculator', label: 'Калькулятор' },
   { href: '#how-it-works', label: 'Как это работает' },
   { href: '#partners', label: 'Партнёрам' },
-  { href: '#faq', label: 'Вопросы' },
 ]
 
 export function Header() {

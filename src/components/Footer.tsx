@@ -9,8 +9,11 @@ const LINKS = [
   { href: '#how-it-works', label: 'Как это работает' },
   { href: '#requirements', label: 'Требования' },
   { href: '#partners', label: 'Партнёрам' },
-  { href: '#faq', label: 'Вопросы' },
-  { href: '#legal', label: 'Правовая информация' },
+]
+
+const LEGAL_LINKS = [
+  { href: '#/privacy-policy', label: 'Политика обработки персональных данных' },
+  { href: '#/terms', label: 'Пользовательское соглашение' },
 ]
 
 export function Footer() {
@@ -65,6 +68,17 @@ export function Footer() {
             не является публичной офертой (ст. 437 ГК РФ). Итоговые условия определяются
             договором при оформлении.
           </p>
+          <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+            {LEGAL_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-xs text-ink-faint underline underline-offset-2 transition-colors hover:text-accent"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
           <p className="mt-3 text-xs text-ink-faint">© {new Date().getFullYear()} NISAB. Все права защищены.</p>
         </div>
       </Container>
