@@ -23,15 +23,7 @@ import {
   stepPrice,
 } from '../lib/calculator'
 
-type Mode = 'withDown' | 'noDown'
-
-const TABS: { id: Mode; label: string }[] = [
-  { id: 'withDown', label: 'Со взносом' },
-  { id: 'noDown', label: 'Без взноса' },
-]
-
 export function Calculator() {
-  const [mode, setMode] = useState<Mode>('withDown')
   const [isPremium, setIsPremium] = useState(false)
   const [price, setPrice] = useState(DEFAULT_PRICE)
   const [priceInput, setPriceInput] = useState(formatNumber(DEFAULT_PRICE))
@@ -45,12 +37,11 @@ export function Calculator() {
   const downAmountCursor = useCursorSafeDigitInput()
   const skipDownAmountSyncRef = useRef(false)
 
-  const effectiveDownPercent = mode === 'noDown' ? 0 : downPercent
   const monthlyMarkupRate = isPremium ? PREMIUM_MONTHLY_MARKUP_RATE : STANDARD_MONTHLY_MARKUP_RATE
 
   const rawResult = useMemo(
-    () => calculate(price, months, effectiveDownPercent, monthlyMarkupRate),
-    [price, months, effectiveDownPercent, monthlyMarkupRate],
+    () => calculate(price, months, downPercent, monthlyMarkupRate),
+    [price, months, downPercent, monthlyMarkupRate],
   )
 
   // The down-payment slider drags across round ruble amounts (like the
@@ -74,14 +65,14 @@ export function Calculator() {
   // thumb and the numbers disagree and appear to jump around as price
   // changes.
   const result = useMemo(() => {
-    if (mode === 'noDown' || rawResult.totalWithMarkup <= 0) return rawResult
+    if (rawResult.totalWithMarkup <= 0) return rawResult
     const total = rawResult.totalWithMarkup
     const roundedAmount = Math.min(
       downAmountBounds.max,
       Math.max(downAmountBounds.min, Math.round(rawResult.downPaymentAmount / PRICE_STEP) * PRICE_STEP),
     )
     return calculate(price, months, (roundedAmount / total) * 100, monthlyMarkupRate)
-  }, [rawResult, mode, downAmountBounds, price, months, monthlyMarkupRate])
+  }, [rawResult, downAmountBounds, price, months, monthlyMarkupRate])
 
   const roundedDownPercent = Math.round(result.downPaymentPercent)
 
@@ -102,14 +93,14 @@ export function Calculator() {
     const parts = [
       'Здравствуйте! Хочу оформить рассрочку в NISAB.',
       `Товар: ${formatRub(result.price)}, срок ${result.months} мес.`,
-      mode === 'withDown'
+      result.downPaymentAmount > 0
         ? `Взнос ${roundedDownPercent}% (${formatRub(result.downPaymentAmount)}).`
         : 'Без первого взноса.',
       `Ежемесячный платёж: ${formatRub(result.monthlyPayment)}.`,
       isPremium ? 'Тариф: Премиум.' : '',
     ].filter(Boolean)
     return buildWhatsAppHref(parts.join(' '))
-  }, [mode, result, roundedDownPercent, isPremium])
+  }, [result, roundedDownPercent, isPremium])
 
   function handlePriceChange(event: ChangeEvent<HTMLInputElement>) {
     const { digits, restoreCursor } = priceCursor.parseWithCursor(event)
@@ -177,21 +168,6 @@ export function Calculator() {
         </div>
 
         <div className="rounded-sm border border-line">
-          <div className="flex border-b border-line">
-            {TABS.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setMode(tab.id)}
-                className={`border-b-2 px-6 py-4 text-xs font-semibold tracking-[0.1em] uppercase transition-colors duration-200 ${
-                  mode === tab.id ? 'border-accent text-ink' : 'border-transparent text-ink-faint hover:text-ink'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
           <div className="grid lg:grid-cols-2 lg:divide-x lg:divide-line">
             <div className="space-y-10 p-6 sm:p-8">
               <label className="flex cursor-pointer items-start gap-3 rounded-sm border border-line p-4 transition-colors duration-200 hover:border-ink">
@@ -288,74 +264,65 @@ export function Calculator() {
                 </div>
               </div>
 
-              {mode === 'withDown' && (
-                <div className="animate-fade-in">
-                  <div className="flex items-center justify-between">
-                    <label htmlFor="downAmount" className="text-xs tracking-[0.1em] text-ink-soft uppercase">
-                      Первый взнос
-                    </label>
-                    <span className="font-tabular text-sm font-bold text-ink">{roundedDownPercent}%</span>
-                  </div>
-                  <div className="mt-3 flex items-stretch gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleDownAmountStep(-1)}
-                      disabled={result.downPaymentAmount <= downAmountBounds.min}
-                      aria-label={`Уменьшить на ${PRICE_STEP} ₽`}
-                      className="flex w-11 shrink-0 items-center justify-center rounded-sm border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
-                    >
-                      <Minus className="h-4 w-4" />
-                    </button>
+              <div>
+                <div className="flex items-center justify-between">
+                  <label htmlFor="downAmount" className="text-xs tracking-[0.1em] text-ink-soft uppercase">
+                    Первый взнос
+                  </label>
+                  <span className="font-tabular text-sm font-bold text-ink">{roundedDownPercent}%</span>
+                </div>
+                <div className="mt-3 flex items-stretch gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleDownAmountStep(-1)}
+                    disabled={result.downPaymentAmount <= downAmountBounds.min}
+                    aria-label={`Уменьшить на ${PRICE_STEP} ₽`}
+                    className="flex w-11 shrink-0 items-center justify-center rounded-sm border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
 
-                    <div className="flex flex-1 items-center gap-2 rounded-sm border border-line px-4 py-3 transition-colors duration-200 focus-within:border-ink">
-                      <input
-                        id="downAmount"
-                        ref={downAmountCursor.ref}
-                        inputMode="numeric"
-                        value={downAmountInput}
-                        onChange={handleDownAmountChange}
-                        onBlur={handleDownAmountBlur}
-                        className="font-tabular w-full bg-transparent text-2xl font-bold text-ink outline-none"
-                      />
-                      <span className="text-lg text-ink-faint">₽</span>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => handleDownAmountStep(1)}
-                      disabled={result.downPaymentAmount >= downAmountBounds.max}
-                      aria-label={`Увеличить на ${PRICE_STEP} ₽`}
-                      className="flex w-11 shrink-0 items-center justify-center rounded-sm border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
-                  </div>
-                  <div className="mt-5">
-                    <Slider
-                      min={downAmountBounds.min}
-                      max={downAmountBounds.max}
-                      step={PRICE_STEP}
-                      value={result.downPaymentAmount}
-                      onChange={(amount) => {
-                        const total = result.totalWithMarkup
-                        setDownPercent(total > 0 ? (amount / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
-                      }}
-                      ariaLabel="Первый взнос"
+                  <div className="flex flex-1 items-center gap-2 rounded-sm border border-line px-4 py-3 transition-colors duration-200 focus-within:border-ink">
+                    <input
+                      id="downAmount"
+                      ref={downAmountCursor.ref}
+                      inputMode="numeric"
+                      value={downAmountInput}
+                      onChange={handleDownAmountChange}
+                      onBlur={handleDownAmountBlur}
+                      className="font-tabular w-full bg-transparent text-2xl font-bold text-ink outline-none"
                     />
+                    <span className="text-lg text-ink-faint">₽</span>
                   </div>
-                  <div className="mt-2 flex justify-between text-[11px] text-ink-faint">
-                    <span>{MIN_DOWN_PAYMENT_PERCENT}%</span>
-                    <span>{MAX_DOWN_PAYMENT_PERCENT}%</span>
-                  </div>
-                </div>
-              )}
 
-              {mode === 'noDown' && (
-                <div className="animate-fade-in border-l-2 border-accent py-1 pl-4 text-sm leading-relaxed text-ink-soft">
-                  В режиме «без взноса» товар оформляется в рассрочку сразу на полную стоимость с
-                  наценкой — оплата первого взноса не требуется.
+                  <button
+                    type="button"
+                    onClick={() => handleDownAmountStep(1)}
+                    disabled={result.downPaymentAmount >= downAmountBounds.max}
+                    aria-label={`Увеличить на ${PRICE_STEP} ₽`}
+                    className="flex w-11 shrink-0 items-center justify-center rounded-sm border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
                 </div>
-              )}
+                <div className="mt-5">
+                  <Slider
+                    min={downAmountBounds.min}
+                    max={downAmountBounds.max}
+                    step={PRICE_STEP}
+                    value={result.downPaymentAmount}
+                    onChange={(amount) => {
+                      const total = result.totalWithMarkup
+                      setDownPercent(total > 0 ? (amount / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
+                    }}
+                    ariaLabel="Первый взнос"
+                  />
+                </div>
+                <div className="mt-2 flex justify-between text-[11px] text-ink-faint">
+                  <span>{MIN_DOWN_PAYMENT_PERCENT}%</span>
+                  <span>{MAX_DOWN_PAYMENT_PERCENT}%</span>
+                </div>
+              </div>
             </div>
 
             <div className="flex flex-col bg-paper-raised p-6 text-ink transition-colors duration-300 sm:p-8">
@@ -369,14 +336,10 @@ export function Calculator() {
                 <Row label="Стоимость товара" value={formatRub(result.price)} />
                 <Row label="Наценка" value={`+ ${formatRub(result.markupAmount)}`} />
                 <Row label="Итого с наценкой" value={formatRub(result.totalWithMarkup)} strong />
-                {mode === 'withDown' && (
-                  <div className="animate-fade-in">
-                    <Row
-                      label={`Первый взнос (${roundedDownPercent}%)`}
-                      value={`− ${formatRub(result.downPaymentAmount)}`}
-                    />
-                  </div>
-                )}
+                <Row
+                  label={`Первый взнос (${roundedDownPercent}%)`}
+                  value={`− ${formatRub(result.downPaymentAmount)}`}
+                />
                 <Row label="Сумма в рассрочку" value={formatRub(result.financedAmount)} strong />
               </div>
 

@@ -11,7 +11,7 @@ export const MAX_MONTHS = 12
 export const DEFAULT_MONTHS = 6
 
 export const DEFAULT_DOWN_PAYMENT_PERCENT = 25
-export const MIN_DOWN_PAYMENT_PERCENT = 10
+export const MIN_DOWN_PAYMENT_PERCENT = 0
 export const MAX_DOWN_PAYMENT_PERCENT = 70
 
 export interface CalculatorResult {
