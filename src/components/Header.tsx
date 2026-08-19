@@ -21,12 +21,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-paper transition-colors duration-300">
       <Container className="flex h-24 items-center justify-between">
-        <a href="#calculator" className="flex items-center gap-3">
-          <img src={theme === 'dark' ? iconWhite : iconNavy} alt="NISAB" className="h-12 w-12" />
+        <a href="#calculator" className="flex items-center gap-3 sm:gap-4">
+          <img src={theme === 'dark' ? iconWhite : iconNavy} alt="NISAB" className="h-14 w-14 sm:h-16 sm:w-16" />
           <span className="flex flex-col leading-none">
-            <span className="font-sans text-2xl font-bold tracking-wide text-ink">NISAB</span>
-            <span className="mt-1.5 flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.22em] text-ink-faint uppercase">
-              <Star8 className="h-2 w-2" /> Исламская рассрочка
+            <span className="font-sans text-2xl font-bold tracking-wide text-ink sm:text-3xl">NISAB</span>
+            <span className="mt-1.5 flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.22em] text-ink-faint uppercase sm:mt-2 sm:text-xs">
+              <Star8 className="h-2 w-2 shrink-0 sm:h-2.5 sm:w-2.5" /> Исламская рассрочка
             </span>
           </span>
         </a>
