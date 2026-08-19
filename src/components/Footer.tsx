@@ -7,7 +7,6 @@ import { PHONE_DISPLAY, PHONE_HREF, WHATSAPP_HREF } from '../lib/contacts'
 const LINKS = [
   { href: '#calculator', label: 'Калькулятор' },
   { href: '#how-it-works', label: 'Как это работает' },
-  { href: '#advantages', label: 'Преимущества' },
   { href: '#requirements', label: 'Требования' },
   { href: '#partners', label: 'Партнёрам' },
   { href: '#faq', label: 'Вопросы' },

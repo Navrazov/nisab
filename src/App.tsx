@@ -1,7 +1,6 @@
 import { Header } from './components/Header'
 import { Calculator } from './components/Calculator'
 import { HowItWorks } from './components/HowItWorks'
-import { Advantages } from './components/Advantages'
 import { Requirements } from './components/Requirements'
 import { Audience } from './components/Audience'
 import { Faq } from './components/Faq'
@@ -15,7 +14,6 @@ function App() {
       <main>
         <Calculator />
         <HowItWorks />
-        <Advantages />
         <Requirements />
         <Audience />
         <Faq />
