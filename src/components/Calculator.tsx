@@ -358,14 +358,14 @@ export function Calculator() {
               )}
             </div>
 
-            <div className="flex flex-col bg-ink p-6 text-paper transition-colors duration-300 sm:p-8">
-              <p className="text-xs tracking-[0.16em] text-paper/50 uppercase">Ежемесячный платёж</p>
-              <p className="font-tabular mt-2 text-6xl leading-none font-black text-accent-invert">
+            <div className="flex flex-col bg-paper-raised p-6 text-ink transition-colors duration-300 sm:p-8">
+              <p className="text-xs tracking-[0.16em] text-ink-faint uppercase">Ежемесячный платёж</p>
+              <p className="font-tabular mt-2 text-6xl leading-none font-black text-accent">
                 {formatRub(result.monthlyPayment)}
               </p>
-              <p className="mt-2 text-xs text-paper/50">в течение {result.months} месяцев</p>
+              <p className="mt-2 text-xs text-ink-faint">в течение {result.months} месяцев</p>
 
-              <div className="mt-8 space-y-3 border-t border-paper/15 pt-6 text-sm">
+              <div className="mt-8 space-y-3 border-t border-line pt-6 text-sm">
                 <Row label="Стоимость товара" value={formatRub(result.price)} />
                 <Row label="Наценка" value={`+ ${formatRub(result.markupAmount)}`} />
                 <Row label="Итого с наценкой" value={formatRub(result.totalWithMarkup)} strong />
@@ -380,7 +380,7 @@ export function Calculator() {
                 <Row label="Сумма в рассрочку" value={formatRub(result.financedAmount)} strong />
               </div>
 
-              <p className="mt-6 text-xs leading-relaxed text-paper/45 italic">
+              <p className="mt-6 text-xs leading-relaxed text-ink-faint italic">
                 Расчёт носит справочный характер. Итоговые условия фиксируются в договоре
                 купли-продажи с рассрочкой платежа и могут уточняться менеджером.
               </p>
@@ -404,8 +404,8 @@ export function Calculator() {
 function Row({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
   return (
     <div className="flex items-center justify-between gap-4">
-      <span className={strong ? 'font-semibold text-paper/85' : 'text-paper/60'}>{label}</span>
-      <span className={`font-tabular font-semibold ${strong ? 'text-paper' : 'text-paper/85'}`}>{value}</span>
+      <span className={strong ? 'font-semibold text-ink' : 'text-ink-soft'}>{label}</span>
+      <span className={`font-tabular font-semibold ${strong ? 'text-ink' : 'text-ink-soft'}`}>{value}</span>
     </div>
   )
 }
