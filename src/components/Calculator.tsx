@@ -345,7 +345,6 @@ export function Calculator() {
                   </div>
                   <div className="mt-2 flex justify-between text-[11px] text-ink-faint">
                     <span>{MIN_DOWN_PAYMENT_PERCENT}%</span>
-                    <span>стандартно 25%</span>
                     <span>{MAX_DOWN_PAYMENT_PERCENT}%</span>
                   </div>
                 </div>
