@@ -4,7 +4,7 @@ import { Container } from '../ui/Container'
 export function LegalLayout({ title, updated, children }: { title: string; updated: string; children: ReactNode }) {
   return (
     <section className="scroll-mt-20 border-b border-line py-16 sm:py-24">
-      <Container className="max-w-3xl">
+      <Container maxWidth="max-w-3xl">
         <a
           href="#calculator"
           className="text-xs font-semibold tracking-[0.1em] text-ink-faint uppercase transition-colors duration-200 hover:text-accent"
