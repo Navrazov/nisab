@@ -103,7 +103,7 @@ input[type='range'].nisab-slider {
 }
 
 input[type='range'].nisab-slider::-webkit-slider-runnable-track {
-  height: 2px;
+  height: 4px;
   border-radius: 0;
   background: linear-gradient(
     to right,
@@ -116,7 +116,7 @@ input[type='range'].nisab-slider::-webkit-slider-runnable-track {
 }
 
 input[type='range'].nisab-slider::-moz-range-track {
-  height: 2px;
+  height: 4px;
   border-radius: 0;
   background: linear-gradient(
     to right,
@@ -136,7 +136,7 @@ input[type='range'].nisab-slider::-webkit-slider-thumb {
   border-radius: 50%;
   background: var(--color-accent);
   cursor: pointer;
-  margin-top: -9px;
+  margin-top: -8px;
   transition: transform 150ms ease, background-color 250ms ease;
 }
 
@@ -176,7 +176,7 @@ input[type='range'].nisab-slider:active::-moz-range-thumb {
   input[type='range'].nisab-slider::-webkit-slider-thumb {
     width: 24px;
     height: 24px;
-    margin-top: -11px;
+    margin-top: -10px;
   }
 
   input[type='range'].nisab-slider::-moz-range-thumb {
