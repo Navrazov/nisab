@@ -1,7 +1,8 @@
-// Total markup (not a monthly rate) is a straight line in the down-payment
-// percent: 0% down sits at the base rate, and each extra point of down
-// payment shaves off the slope — e.g. standard at 25% down is
-// 5 - 0.048 * 25 = 3.8%, at 50% down it's 5 - 0.048 * 50 = 2.6%.
+// The *monthly* markup rate is a straight line in the down-payment percent:
+// 0% down sits at the base rate, and each extra point of down payment
+// shaves off the slope — e.g. standard at 25% down is 5 - 0.048 * 25 = 3.8%
+// per month, at 50% down it's 5 - 0.048 * 50 = 2.6% per month. The total
+// markup then accrues linearly over the term (monthly rate * months).
 export interface MarkupRate {
   basePercent: number
   slopePerDownPaymentPoint: number
@@ -45,10 +46,11 @@ export function calculate(
   const safeMonths = Math.min(MAX_MONTHS, Math.max(MIN_MONTHS, months))
   const safeDownPercent = Math.min(100, Math.max(0, downPaymentPercent))
 
-  const markupPercent = Math.max(
+  const monthlyMarkupPercent = Math.max(
     0,
     markupRate.basePercent - markupRate.slopePerDownPaymentPoint * safeDownPercent,
   )
+  const markupPercent = monthlyMarkupPercent * safeMonths
   const markupAmount = safePrice * (markupPercent / 100)
   const totalWithMarkup = safePrice + markupAmount
   const downPaymentAmount = totalWithMarkup * (safeDownPercent / 100)
