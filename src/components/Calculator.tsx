@@ -20,6 +20,7 @@ import {
   calculate,
   formatNumber,
   formatRub,
+  resolveDownPaymentForAmount,
   stepPrice,
 } from '../lib/calculator'
 
@@ -66,12 +67,11 @@ export function Calculator() {
   // changes.
   const result = useMemo(() => {
     if (rawResult.totalWithMarkup <= 0) return rawResult
-    const total = rawResult.totalWithMarkup
     const roundedAmount = Math.min(
       downAmountBounds.max,
       Math.max(downAmountBounds.min, Math.round(rawResult.downPaymentAmount / PRICE_STEP) * PRICE_STEP),
     )
-    return calculate(price, months, (roundedAmount / total) * 100, markupRate)
+    return resolveDownPaymentForAmount(price, months, roundedAmount, markupRate, rawResult.downPaymentPercent)
   }, [rawResult, downAmountBounds, price, months, markupRate])
 
   const roundedDownPercent = Math.round(result.downPaymentPercent)

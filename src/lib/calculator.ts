@@ -70,6 +70,31 @@ export function calculate(
   }
 }
 
+// The down-payment slider drags across round ruble amounts, but since the
+// markup rate now depends on the down-payment percent, the total (and thus
+// the percent needed to land on an exact ruble amount) shifts slightly as
+// the percent is adjusted. A few fixed-point iterations converge it — the
+// feedback is weak (a whole point of down payment only moves the rate by a
+// fraction of a percent) so this settles well within the loop below.
+export function resolveDownPaymentForAmount(
+  price: number,
+  months: number,
+  targetAmount: number,
+  markupRate: MarkupRate,
+  guessPercent: number,
+): CalculatorResult {
+  let percent = guessPercent
+  let result = calculate(price, months, percent, markupRate)
+
+  for (let i = 0; i < 8; i++) {
+    if (result.totalWithMarkup <= 0) break
+    percent = (targetAmount / result.totalWithMarkup) * 100
+    result = calculate(price, months, percent, markupRate)
+  }
+
+  return result
+}
+
 export function stepPrice(price: number, direction: 1 | -1): number {
   const isRoundStep = price % PRICE_STEP === 0
   const roundedToStep =
