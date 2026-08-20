@@ -29,6 +29,13 @@
      always the opposite tone of --color-accent so it stays legible when
      the stamp's fill flips relative to the page) */
   --color-accent-invert: #c9a063;
+
+  /* slider track gradient — deep navy at the low end blending into brass at
+     the high end, fixed across both themes (not redefined under .dark) so
+     the bar reads as a deliberate brand gradient rather than following the
+     page's own light/dark flip */
+  --color-slider-start: #1c2436;
+  --color-slider-end: #cda468;
 }
 
 .dark {
@@ -103,29 +110,15 @@ input[type='range'].nisab-slider {
 }
 
 input[type='range'].nisab-slider::-webkit-slider-runnable-track {
-  height: 6px;
+  height: 7px;
   border-radius: 999px;
-  background: linear-gradient(
-    to right,
-    var(--color-accent-invert) 0%,
-    var(--color-accent) var(--fill, 50%),
-    var(--color-line) var(--fill, 50%),
-    var(--color-line) 100%
-  );
-  transition: background 250ms ease;
+  background: linear-gradient(to right, var(--color-slider-start), var(--color-slider-end));
 }
 
 input[type='range'].nisab-slider::-moz-range-track {
-  height: 6px;
+  height: 7px;
   border-radius: 999px;
-  background: linear-gradient(
-    to right,
-    var(--color-accent-invert) 0%,
-    var(--color-accent) var(--fill, 50%),
-    var(--color-line) var(--fill, 50%),
-    var(--color-line) 100%
-  );
-  transition: background 250ms ease;
+  background: linear-gradient(to right, var(--color-slider-start), var(--color-slider-end));
 }
 
 input[type='range'].nisab-slider::-webkit-slider-thumb {
@@ -134,55 +127,45 @@ input[type='range'].nisab-slider::-webkit-slider-thumb {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: radial-gradient(circle at 32% 28%, #fff7e6 0%, var(--color-accent) 60%, var(--color-accent) 100%);
-  border: 3px solid var(--color-paper);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.28),
-    0 0 0 4px color-mix(in srgb, var(--color-accent) 22%, transparent);
+  background: #f8f2e4;
+  border: 3px solid #b8905a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
   cursor: pointer;
-  margin-top: -9px;
-  transition: transform 150ms ease, box-shadow 200ms ease, background-color 250ms ease;
+  margin-top: -8.5px;
+  transition: transform 150ms ease, box-shadow 200ms ease, border-color 200ms ease;
 }
 
 input[type='range'].nisab-slider:hover::-webkit-slider-thumb {
   transform: scale(1.15);
-  box-shadow:
-    0 3px 10px rgba(0, 0, 0, 0.32),
-    0 0 0 6px color-mix(in srgb, var(--color-accent) 28%, transparent);
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.4);
 }
 
 input[type='range'].nisab-slider:active::-webkit-slider-thumb {
   transform: scale(1.28);
-  box-shadow:
-    0 3px 12px rgba(0, 0, 0, 0.35),
-    0 0 0 8px color-mix(in srgb, var(--color-accent) 32%, transparent);
+  border-color: #8a6a3c;
+  box-shadow: 0 3px 11px rgba(0, 0, 0, 0.45);
 }
 
 input[type='range'].nisab-slider::-moz-range-thumb {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 3px solid var(--color-paper);
-  background: radial-gradient(circle at 32% 28%, #fff7e6 0%, var(--color-accent) 60%, var(--color-accent) 100%);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.28),
-    0 0 0 4px color-mix(in srgb, var(--color-accent) 22%, transparent);
+  border: 3px solid #b8905a;
+  background: #f8f2e4;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
   cursor: pointer;
-  transition: transform 150ms ease, box-shadow 200ms ease, background-color 250ms ease;
+  transition: transform 150ms ease, box-shadow 200ms ease, border-color 200ms ease;
 }
 
 input[type='range'].nisab-slider:hover::-moz-range-thumb {
   transform: scale(1.15);
-  box-shadow:
-    0 3px 10px rgba(0, 0, 0, 0.32),
-    0 0 0 6px color-mix(in srgb, var(--color-accent) 28%, transparent);
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.4);
 }
 
 input[type='range'].nisab-slider:active::-moz-range-thumb {
   transform: scale(1.28);
-  box-shadow:
-    0 3px 12px rgba(0, 0, 0, 0.35),
-    0 0 0 8px color-mix(in srgb, var(--color-accent) 32%, transparent);
+  border-color: #8a6a3c;
+  box-shadow: 0 3px 11px rgba(0, 0, 0, 0.45);
 }
 
 /* even bigger touch target on phones, where a 1px-tall bar is very hard to

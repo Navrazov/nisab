@@ -1,5 +1,3 @@
-import type { CSSProperties } from 'react'
-
 interface SliderProps {
   min: number
   max: number
@@ -10,13 +8,10 @@ interface SliderProps {
 }
 
 export function Slider({ min, max, step, value, onChange, ariaLabel }: SliderProps) {
-  const percent = ((value - min) / (max - min)) * 100
-
   return (
     <input
       type="range"
       className="nisab-slider w-full"
-      style={{ '--fill': `${percent}%` } as CSSProperties}
       min={min}
       max={max}
       step={step}
