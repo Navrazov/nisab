@@ -1,5 +1,14 @@
-export const STANDARD_MONTHLY_MARKUP_RATE = 0.038
-export const PREMIUM_MONTHLY_MARKUP_RATE = 0.03
+// Total markup (not a monthly rate) is a straight line in the down-payment
+// percent: 0% down sits at the base rate, and each extra point of down
+// payment shaves off the slope — e.g. standard at 25% down is
+// 5 - 0.048 * 25 = 3.8%, at 50% down it's 5 - 0.048 * 50 = 2.6%.
+export interface MarkupRate {
+  basePercent: number
+  slopePerDownPaymentPoint: number
+}
+
+export const STANDARD_MARKUP_RATE: MarkupRate = { basePercent: 5, slopePerDownPaymentPoint: 0.048 }
+export const PREMIUM_MARKUP_RATE: MarkupRate = { basePercent: 4, slopePerDownPaymentPoint: 0.04 }
 
 export const MIN_PRICE = 1000
 export const MAX_PRICE = 1000000
@@ -30,14 +39,17 @@ export function calculate(
   price: number,
   months: number,
   downPaymentPercent: number,
-  monthlyMarkupRate: number = STANDARD_MONTHLY_MARKUP_RATE,
+  markupRate: MarkupRate = STANDARD_MARKUP_RATE,
 ): CalculatorResult {
   const safePrice = Number.isFinite(price) && price > 0 ? price : 0
   const safeMonths = Math.min(MAX_MONTHS, Math.max(MIN_MONTHS, months))
   const safeDownPercent = Math.min(100, Math.max(0, downPaymentPercent))
 
-  const markupPercent = monthlyMarkupRate * safeMonths * 100
-  const markupAmount = safePrice * (monthlyMarkupRate * safeMonths)
+  const markupPercent = Math.max(
+    0,
+    markupRate.basePercent - markupRate.slopePerDownPaymentPoint * safeDownPercent,
+  )
+  const markupAmount = safePrice * (markupPercent / 100)
   const totalWithMarkup = safePrice + markupAmount
   const downPaymentAmount = totalWithMarkup * (safeDownPercent / 100)
   const financedAmount = totalWithMarkup - downPaymentAmount

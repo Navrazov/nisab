@@ -14,9 +14,9 @@ import {
   MIN_DOWN_PAYMENT_PERCENT,
   MIN_MONTHS,
   MIN_PRICE,
-  PREMIUM_MONTHLY_MARKUP_RATE,
+  PREMIUM_MARKUP_RATE,
   PRICE_STEP,
-  STANDARD_MONTHLY_MARKUP_RATE,
+  STANDARD_MARKUP_RATE,
   calculate,
   formatNumber,
   formatRub,
@@ -37,11 +37,11 @@ export function Calculator() {
   const downAmountCursor = useCursorSafeDigitInput()
   const skipDownAmountSyncRef = useRef(false)
 
-  const monthlyMarkupRate = isPremium ? PREMIUM_MONTHLY_MARKUP_RATE : STANDARD_MONTHLY_MARKUP_RATE
+  const markupRate = isPremium ? PREMIUM_MARKUP_RATE : STANDARD_MARKUP_RATE
 
   const rawResult = useMemo(
-    () => calculate(price, months, downPercent, monthlyMarkupRate),
-    [price, months, downPercent, monthlyMarkupRate],
+    () => calculate(price, months, downPercent, markupRate),
+    [price, months, downPercent, markupRate],
   )
 
   // The down-payment slider drags across round ruble amounts (like the
@@ -71,8 +71,8 @@ export function Calculator() {
       downAmountBounds.max,
       Math.max(downAmountBounds.min, Math.round(rawResult.downPaymentAmount / PRICE_STEP) * PRICE_STEP),
     )
-    return calculate(price, months, (roundedAmount / total) * 100, monthlyMarkupRate)
-  }, [rawResult, downAmountBounds, price, months, monthlyMarkupRate])
+    return calculate(price, months, (roundedAmount / total) * 100, markupRate)
+  }, [rawResult, downAmountBounds, price, months, markupRate])
 
   const roundedDownPercent = Math.round(result.downPaymentPercent)
 
