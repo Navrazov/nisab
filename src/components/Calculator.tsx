@@ -155,202 +155,200 @@ export function Calculator() {
   }
 
   return (
-    <section id="calculator" className="scroll-mt-20 border-b border-line pt-10 pb-8 sm:pt-14 sm:pb-24">
+    <section id="calculator" className="scroll-mt-20 border-b border-line pt-6 pb-6 sm:pt-10 sm:pb-16">
       <Container>
-        <div className="mb-10 max-w-2xl">
-          <h2 className="font-serif text-3xl font-bold text-ink sm:text-4xl">
+        <div className="mb-5 max-w-2xl sm:mb-8">
+          <h2 className="font-serif text-2xl font-bold text-ink sm:text-4xl">
             Рассчитайте рассрочку за пару секунд
           </h2>
-          <p className="mt-3 text-ink-soft">
+          <p className="mt-2 text-sm text-ink-soft sm:mt-3 sm:text-base">
             Укажите стоимость товара и срок — калькулятор сразу покажет наценку и ежемесячный
             платёж. Взнос можно изменить вручную, платёж пересчитается автоматически.
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-3xl border border-line shadow-[0_24px_60px_-32px_rgba(0,0,0,0.45)]">
-          <div className="grid lg:grid-cols-2 lg:divide-x lg:divide-line">
-            <div className="space-y-4 p-6 sm:p-8">
-              <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-line p-4 transition-colors duration-200 hover:border-ink">
-                <input
-                  type="checkbox"
-                  checked={isPremium}
-                  onChange={(event) => setIsPremium(event.target.checked)}
-                  className="sr-only"
-                />
-                <span
-                  className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-md border transition-colors duration-200 ${
-                    isPremium ? 'border-accent bg-accent' : 'border-line'
-                  }`}
-                >
-                  {isPremium && <Check className="h-3 w-3 text-paper" />}
-                </span>
-                <span>
-                  <span className="block text-sm font-medium text-ink">Премиум</span>
-                  <span className="block text-xs text-ink-soft">Сниженная наценка на рассрочку</span>
-                </span>
-              </label>
-
-              <div>
-                <label htmlFor="price" className="text-xs tracking-[0.1em] text-ink-soft uppercase">
-                  Стоимость товара
-                </label>
-                <div className="mt-3 flex items-stretch gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handlePriceStep(-1)}
-                    disabled={price <= MIN_PRICE}
-                    aria-label={`Уменьшить на ${PRICE_STEP} ₽`}
-                    className="flex w-11 shrink-0 items-center justify-center rounded-full border border-line bg-paper-raised text-ink shadow-sm transition-all duration-200 hover:border-accent hover:text-accent hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink disabled:hover:shadow-sm"
-                  >
-                    <Minus className="h-4 w-4" />
-                  </button>
-
-                  <div className="flex flex-1 items-center gap-2 rounded-full border border-line bg-paper-raised px-5 py-2.5 shadow-sm transition-colors duration-200 focus-within:border-accent">
-                    <input
-                      id="price"
-                      ref={priceCursor.ref}
-                      inputMode="numeric"
-                      value={priceInput}
-                      onChange={handlePriceChange}
-                      onBlur={handlePriceBlur}
-                      className="font-tabular w-full bg-transparent text-xl font-bold text-ink outline-none"
-                    />
-                    <span className="text-lg text-ink-faint">₽</span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => handlePriceStep(1)}
-                    disabled={price >= MAX_PRICE}
-                    aria-label={`Увеличить на ${PRICE_STEP} ₽`}
-                    className="flex w-11 shrink-0 items-center justify-center rounded-full border border-line bg-paper-raised text-ink shadow-sm transition-all duration-200 hover:border-accent hover:text-accent hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink disabled:hover:shadow-sm"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </button>
-                </div>
-                <div className="mt-5">
-                  <Slider
-                    min={MIN_PRICE}
-                    max={MAX_PRICE}
-                    step={500}
-                    value={price}
-                    onChange={(value) => {
-                      setPrice(value)
-                      setPriceInput(formatNumber(value))
-                    }}
-                    ariaLabel="Стоимость товара"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between">
-                  <label className="text-xs tracking-[0.1em] text-ink-soft uppercase">Срок рассрочки</label>
-                  <span className="font-tabular text-sm font-bold text-ink">{months} мес.</span>
-                </div>
-                <div className="mt-5">
-                  <Slider
-                    min={MIN_MONTHS}
-                    max={MAX_MONTHS}
-                    step={1}
-                    value={months}
-                    onChange={setMonths}
-                    ariaLabel="Срок рассрочки в месяцах"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between">
-                  <label htmlFor="downAmount" className="text-xs tracking-[0.1em] text-ink-soft uppercase">
-                    Первый взнос
-                  </label>
-                  <span className="font-tabular text-sm font-bold text-ink">{roundedDownPercent}%</span>
-                </div>
-                <div className="mt-3 flex items-stretch gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleDownAmountStep(-1)}
-                    disabled={result.downPaymentAmount <= downAmountBounds.min}
-                    aria-label={`Уменьшить на ${PRICE_STEP} ₽`}
-                    className="flex w-11 shrink-0 items-center justify-center rounded-full border border-line bg-paper-raised text-ink shadow-sm transition-all duration-200 hover:border-accent hover:text-accent hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink disabled:hover:shadow-sm"
-                  >
-                    <Minus className="h-4 w-4" />
-                  </button>
-
-                  <div className="flex flex-1 items-center gap-2 rounded-full border border-line bg-paper-raised px-5 py-2.5 shadow-sm transition-colors duration-200 focus-within:border-accent">
-                    <input
-                      id="downAmount"
-                      ref={downAmountCursor.ref}
-                      inputMode="numeric"
-                      value={downAmountInput}
-                      onChange={handleDownAmountChange}
-                      onBlur={handleDownAmountBlur}
-                      className="font-tabular w-full bg-transparent text-xl font-bold text-ink outline-none"
-                    />
-                    <span className="text-lg text-ink-faint">₽</span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => handleDownAmountStep(1)}
-                    disabled={result.downPaymentAmount >= downAmountBounds.max}
-                    aria-label={`Увеличить на ${PRICE_STEP} ₽`}
-                    className="flex w-11 shrink-0 items-center justify-center rounded-full border border-line bg-paper-raised text-ink shadow-sm transition-all duration-200 hover:border-accent hover:text-accent hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink disabled:hover:shadow-sm"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </button>
-                </div>
-                <div className="mt-5">
-                  <Slider
-                    min={downAmountBounds.min}
-                    max={downAmountBounds.max}
-                    step={PRICE_STEP}
-                    value={result.downPaymentAmount}
-                    onChange={(amount) => {
-                      const total = result.totalWithMarkup
-                      setDownPercent(total > 0 ? (amount / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
-                    }}
-                    ariaLabel="Первый взнос"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col bg-paper-raised p-6 text-ink transition-colors duration-300 sm:p-8">
-              <p className="text-xs tracking-[0.16em] text-ink-faint uppercase">Ежемесячный платёж</p>
-              <p className="font-tabular mt-2 text-6xl leading-none font-bold text-accent dark:text-ink">
-                {formatRub(result.monthlyPayment)}
-              </p>
-              <p className="mt-2 text-xs text-ink-faint">в течение {result.months} месяцев</p>
-
-              <div className="mt-4 space-y-3 border-t border-line pt-6 text-sm">
-                <Row label="Стоимость товара" value={formatRub(result.price)} />
-                <Row label="Наценка" value={`+ ${formatRub(result.markupAmount)}`} />
-                <Row label="Итого с наценкой" value={formatRub(result.totalWithMarkup)} strong />
-                <Row
-                  label={`Первый взнос (${roundedDownPercent}%)`}
-                  value={`− ${formatRub(result.downPaymentAmount)}`}
-                />
-                <Row label="Сумма в рассрочку" value={formatRub(result.financedAmount)} strong />
-              </div>
-
-              <p className="mt-6 text-xs leading-relaxed text-ink-faint italic">
-                Расчёт носит справочный характер. Итоговые условия фиксируются в договоре
-                купли-продажи с рассрочкой платежа и могут уточняться менеджером.
-              </p>
-
-              <div className="flex-1" />
-
-              <a
-                href={requestHref}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-6 flex items-center justify-center rounded-full bg-accent py-3.5 text-xs font-bold tracking-[0.1em] text-paper uppercase shadow-md transition-all duration-200 hover:opacity-85 hover:shadow-lg active:scale-[0.98]"
+        <div className="grid gap-3 lg:grid-cols-2 lg:gap-5">
+          <div className="space-y-3 rounded-3xl border border-line p-4 shadow-[0_24px_60px_-32px_rgba(0,0,0,0.45)] sm:p-6">
+            <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-line p-3 transition-colors duration-200 hover:border-ink">
+              <input
+                type="checkbox"
+                checked={isPremium}
+                onChange={(event) => setIsPremium(event.target.checked)}
+                className="sr-only"
+              />
+              <span
+                className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-md border transition-colors duration-200 ${
+                  isPremium ? 'border-accent bg-accent' : 'border-line'
+                }`}
               >
-                Оставить заявку
-              </a>
+                {isPremium && <Check className="h-3 w-3 text-paper" />}
+              </span>
+              <span>
+                <span className="block text-sm font-medium text-ink">Премиум</span>
+                <span className="block text-xs text-ink-soft">Сниженная наценка на рассрочку</span>
+              </span>
+            </label>
+
+            <div>
+              <label htmlFor="price" className="text-xs tracking-[0.1em] text-ink-soft uppercase">
+                Стоимость товара
+              </label>
+              <div className="mt-2 flex items-stretch gap-2">
+                <button
+                  type="button"
+                  onClick={() => handlePriceStep(-1)}
+                  disabled={price <= MIN_PRICE}
+                  aria-label={`Уменьшить на ${PRICE_STEP} ₽`}
+                  className="flex w-10 shrink-0 items-center justify-center rounded-full border border-line bg-paper-raised text-ink shadow-sm transition-all duration-200 hover:border-accent hover:text-accent hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink disabled:hover:shadow-sm"
+                >
+                  <Minus className="h-4 w-4" />
+                </button>
+
+                <div className="flex flex-1 items-center gap-2 rounded-full border border-line bg-paper-raised px-4 py-2 shadow-sm transition-colors duration-200 focus-within:border-accent">
+                  <input
+                    id="price"
+                    ref={priceCursor.ref}
+                    inputMode="numeric"
+                    value={priceInput}
+                    onChange={handlePriceChange}
+                    onBlur={handlePriceBlur}
+                    className="font-tabular w-full bg-transparent text-lg font-bold text-ink outline-none"
+                  />
+                  <span className="text-base text-ink-faint">₽</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => handlePriceStep(1)}
+                  disabled={price >= MAX_PRICE}
+                  aria-label={`Увеличить на ${PRICE_STEP} ₽`}
+                  className="flex w-10 shrink-0 items-center justify-center rounded-full border border-line bg-paper-raised text-ink shadow-sm transition-all duration-200 hover:border-accent hover:text-accent hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink disabled:hover:shadow-sm"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="mt-3">
+                <Slider
+                  min={MIN_PRICE}
+                  max={MAX_PRICE}
+                  step={500}
+                  value={price}
+                  onChange={(value) => {
+                    setPrice(value)
+                    setPriceInput(formatNumber(value))
+                  }}
+                  ariaLabel="Стоимость товара"
+                />
+              </div>
             </div>
+
+            <div>
+              <div className="flex items-center justify-between">
+                <label className="text-xs tracking-[0.1em] text-ink-soft uppercase">Срок рассрочки</label>
+                <span className="font-tabular text-sm font-bold text-ink">{months} мес.</span>
+              </div>
+              <div className="mt-3">
+                <Slider
+                  min={MIN_MONTHS}
+                  max={MAX_MONTHS}
+                  step={1}
+                  value={months}
+                  onChange={setMonths}
+                  ariaLabel="Срок рассрочки в месяцах"
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between">
+                <label htmlFor="downAmount" className="text-xs tracking-[0.1em] text-ink-soft uppercase">
+                  Первый взнос
+                </label>
+                <span className="font-tabular text-sm font-bold text-ink">{roundedDownPercent}%</span>
+              </div>
+              <div className="mt-2 flex items-stretch gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleDownAmountStep(-1)}
+                  disabled={result.downPaymentAmount <= downAmountBounds.min}
+                  aria-label={`Уменьшить на ${PRICE_STEP} ₽`}
+                  className="flex w-10 shrink-0 items-center justify-center rounded-full border border-line bg-paper-raised text-ink shadow-sm transition-all duration-200 hover:border-accent hover:text-accent hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink disabled:hover:shadow-sm"
+                >
+                  <Minus className="h-4 w-4" />
+                </button>
+
+                <div className="flex flex-1 items-center gap-2 rounded-full border border-line bg-paper-raised px-4 py-2 shadow-sm transition-colors duration-200 focus-within:border-accent">
+                  <input
+                    id="downAmount"
+                    ref={downAmountCursor.ref}
+                    inputMode="numeric"
+                    value={downAmountInput}
+                    onChange={handleDownAmountChange}
+                    onBlur={handleDownAmountBlur}
+                    className="font-tabular w-full bg-transparent text-lg font-bold text-ink outline-none"
+                  />
+                  <span className="text-base text-ink-faint">₽</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => handleDownAmountStep(1)}
+                  disabled={result.downPaymentAmount >= downAmountBounds.max}
+                  aria-label={`Увеличить на ${PRICE_STEP} ₽`}
+                  className="flex w-10 shrink-0 items-center justify-center rounded-full border border-line bg-paper-raised text-ink shadow-sm transition-all duration-200 hover:border-accent hover:text-accent hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink disabled:hover:shadow-sm"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="mt-3">
+                <Slider
+                  min={downAmountBounds.min}
+                  max={downAmountBounds.max}
+                  step={PRICE_STEP}
+                  value={result.downPaymentAmount}
+                  onChange={(amount) => {
+                    const total = result.totalWithMarkup
+                    setDownPercent(total > 0 ? (amount / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
+                  }}
+                  ariaLabel="Первый взнос"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col rounded-3xl border border-line bg-paper-raised p-4 text-ink shadow-[0_24px_60px_-32px_rgba(0,0,0,0.45)] transition-colors duration-300 sm:p-6">
+            <p className="text-xs tracking-[0.16em] text-ink-faint uppercase">Ежемесячный платёж</p>
+            <p className="font-tabular mt-1 text-4xl leading-none font-bold text-accent dark:text-ink sm:text-5xl">
+              {formatRub(result.monthlyPayment)}
+            </p>
+            <p className="mt-1.5 text-xs text-ink-faint">в течение {result.months} месяцев</p>
+
+            <div className="mt-3 space-y-2 border-t border-line pt-3 text-sm">
+              <Row label="Стоимость товара" value={formatRub(result.price)} />
+              <Row label="Наценка" value={`+ ${formatRub(result.markupAmount)}`} />
+              <Row label="Итого с наценкой" value={formatRub(result.totalWithMarkup)} strong />
+              <Row
+                label={`Первый взнос (${roundedDownPercent}%)`}
+                value={`− ${formatRub(result.downPaymentAmount)}`}
+              />
+              <Row label="Сумма в рассрочку" value={formatRub(result.financedAmount)} strong />
+            </div>
+
+            <p className="mt-3 text-xs leading-snug text-ink-faint italic">
+              Расчёт носит справочный характер. Итоговые условия фиксируются в договоре
+              купли-продажи с рассрочкой платежа и могут уточняться менеджером.
+            </p>
+
+            <div className="flex-1" />
+
+            <a
+              href={requestHref}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3.5 flex items-center justify-center rounded-full bg-accent py-3 text-xs font-bold tracking-[0.1em] text-paper uppercase shadow-md transition-all duration-200 hover:opacity-85 hover:shadow-lg active:scale-[0.98]"
+            >
+              Оставить заявку
+            </a>
           </div>
         </div>
       </Container>
