@@ -167,10 +167,10 @@ export function Calculator() {
           </p>
         </div>
 
-        <div className="rounded-md border border-line">
+        <div className="overflow-hidden rounded-3xl border border-line shadow-[0_24px_60px_-32px_rgba(0,0,0,0.45)]">
           <div className="grid lg:grid-cols-2 lg:divide-x lg:divide-line">
             <div className="space-y-4 p-6 sm:p-8">
-              <label className="flex cursor-pointer items-start gap-3 rounded-md border border-line p-4 transition-colors duration-200 hover:border-ink">
+              <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-line p-4 transition-colors duration-200 hover:border-ink">
                 <input
                   type="checkbox"
                   checked={isPremium}
@@ -200,12 +200,12 @@ export function Calculator() {
                     onClick={() => handlePriceStep(-1)}
                     disabled={price <= MIN_PRICE}
                     aria-label={`Уменьшить на ${PRICE_STEP} ₽`}
-                    className="flex w-11 shrink-0 items-center justify-center rounded-md border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
+                    className="flex w-11 shrink-0 items-center justify-center rounded-full border border-line bg-paper-raised text-ink shadow-sm transition-all duration-200 hover:border-accent hover:text-accent hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink disabled:hover:shadow-sm"
                   >
                     <Minus className="h-4 w-4" />
                   </button>
 
-                  <div className="flex flex-1 items-center gap-2 rounded-md border border-line px-4 py-2 transition-colors duration-200 focus-within:border-ink">
+                  <div className="flex flex-1 items-center gap-2 rounded-full border border-line bg-paper-raised px-5 py-2.5 shadow-sm transition-colors duration-200 focus-within:border-accent">
                     <input
                       id="price"
                       ref={priceCursor.ref}
@@ -223,7 +223,7 @@ export function Calculator() {
                     onClick={() => handlePriceStep(1)}
                     disabled={price >= MAX_PRICE}
                     aria-label={`Увеличить на ${PRICE_STEP} ₽`}
-                    className="flex w-11 shrink-0 items-center justify-center rounded-md border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
+                    className="flex w-11 shrink-0 items-center justify-center rounded-full border border-line bg-paper-raised text-ink shadow-sm transition-all duration-200 hover:border-accent hover:text-accent hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink disabled:hover:shadow-sm"
                   >
                     <Plus className="h-4 w-4" />
                   </button>
@@ -273,12 +273,12 @@ export function Calculator() {
                     onClick={() => handleDownAmountStep(-1)}
                     disabled={result.downPaymentAmount <= downAmountBounds.min}
                     aria-label={`Уменьшить на ${PRICE_STEP} ₽`}
-                    className="flex w-11 shrink-0 items-center justify-center rounded-md border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
+                    className="flex w-11 shrink-0 items-center justify-center rounded-full border border-line bg-paper-raised text-ink shadow-sm transition-all duration-200 hover:border-accent hover:text-accent hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink disabled:hover:shadow-sm"
                   >
                     <Minus className="h-4 w-4" />
                   </button>
 
-                  <div className="flex flex-1 items-center gap-2 rounded-md border border-line px-4 py-2 transition-colors duration-200 focus-within:border-ink">
+                  <div className="flex flex-1 items-center gap-2 rounded-full border border-line bg-paper-raised px-5 py-2.5 shadow-sm transition-colors duration-200 focus-within:border-accent">
                     <input
                       id="downAmount"
                       ref={downAmountCursor.ref}
@@ -296,7 +296,7 @@ export function Calculator() {
                     onClick={() => handleDownAmountStep(1)}
                     disabled={result.downPaymentAmount >= downAmountBounds.max}
                     aria-label={`Увеличить на ${PRICE_STEP} ₽`}
-                    className="flex w-11 shrink-0 items-center justify-center rounded-md border border-line text-ink transition-colors duration-200 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
+                    className="flex w-11 shrink-0 items-center justify-center rounded-full border border-line bg-paper-raised text-ink shadow-sm transition-all duration-200 hover:border-accent hover:text-accent hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink disabled:hover:shadow-sm"
                   >
                     <Plus className="h-4 w-4" />
                   </button>
@@ -346,7 +346,7 @@ export function Calculator() {
                 href={requestHref}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-6 flex items-center justify-center rounded-md bg-accent py-3.5 text-xs font-bold tracking-[0.1em] text-paper uppercase transition-opacity duration-200 hover:opacity-85"
+                className="mt-6 flex items-center justify-center rounded-full bg-accent py-3.5 text-xs font-bold tracking-[0.1em] text-paper uppercase shadow-md transition-all duration-200 hover:opacity-85 hover:shadow-lg active:scale-[0.98]"
               >
                 Оставить заявку
               </a>
