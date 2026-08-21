@@ -15,9 +15,6 @@ function getInitialTheme(): Theme {
   if (typeof window === 'undefined') return 'dark'
   const stored = window.localStorage.getItem(STORAGE_KEY)
   if (stored === 'light' || stored === 'dark') return stored
-  // Dark is the brand-primary mode — it's what the logo is designed for —
-  // so new visitors land there regardless of OS preference. The toggle
-  // still switches instantly and the choice is remembered from then on.
   return 'dark'
 }
 

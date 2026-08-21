@@ -1,9 +1,3 @@
-/* Fraunces + IBM Plex Sans are loaded via a render-blocking <link>
-   in index.html, not @import here — @import would only be discovered after
-   the app's own bundled stylesheet finishes loading, adding a full extra
-   round-trip. During that gap, an anchor click (scroll-behavior: smooth)
-   could start scrolling before the fonts swap in, and the resulting reflow
-   would land the page short by roughly one header-height. */
 @import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -12,10 +6,6 @@
   --font-serif: 'Fraunces', ui-serif, Georgia, serif;
   --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-  /* semantic tokens — redefined under .dark below, so components reference
-     these names directly (bg-paper, text-ink, border-line…) with no dark:
-     prefix needed. Dark is the brand-primary mode (mirrors the logo's own
-     white-on-navy presentation); light is the secondary, inverted mode. */
   --color-paper: #f5f3ef;
   --color-paper-raised: #ece6d9;
   --color-ink: #0f0e0c;
@@ -23,24 +13,14 @@
   --color-ink-faint: #8d8670;
   --color-line: #dcd5c4;
 
-  /* brass accent, page-level use (against the current page background) */
   --color-accent: #8a6a3c;
-  /* brass accent, inverted-panel use (against a stamp panel — see below,
-     always the opposite tone of --color-accent so it stays legible when
-     the stamp's fill flips relative to the page) */
   --color-accent-invert: #c9a063;
 
-  /* slider track gradient — deep navy at the low end blending into brass at
-     the high end, fixed across both themes (not redefined under .dark) so
-     the bar reads as a deliberate brand gradient rather than following the
-     page's own light/dark flip */
   --color-slider-start: #1c2436;
   --color-slider-end: #cda468;
 }
 
 .dark {
-  /* matched to the physical NISAB card/flyer, which runs noticeably
-     darker (near-black navy) than an earlier, lighter pass at this palette */
   --color-paper: #161a22;
   --color-paper-raised: #2d3138;
   --color-ink: #f5f5f7;
@@ -95,9 +75,6 @@ body {
   transition: grid-template-rows 280ms ease, opacity 280ms ease;
 }
 
-/* range slider — thin visual track drawn on the pseudo-track, but the real
-   input element keeps a tall invisible hit box so it's easy to grab,
-   especially with a finger on mobile */
 input[type='range'].nisab-slider {
   -webkit-appearance: none;
   appearance: none;
@@ -168,8 +145,6 @@ input[type='range'].nisab-slider:active::-moz-range-thumb {
   box-shadow: 0 3px 11px rgba(0, 0, 0, 0.45);
 }
 
-/* even bigger touch target on phones, where a 1px-tall bar is very hard to
-   grab on the first tap */
 @media (max-width: 640px) {
   input[type='range'].nisab-slider {
     height: 40px;

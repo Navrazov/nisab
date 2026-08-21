@@ -7,13 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#161a22" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <!--
-      This covers what a <meta http-equiv> CSP can: script/style/font/img
-      origins. It cannot set frame-ancestors, HSTS or X-Content-Type-Options —
-      those only take effect as real HTTP response headers, which means
-      configuring them on the CDN/object storage in front of this static
-      build, not in this file.
-    -->
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self' 'sha256-82X+UBl2aaBH2NR2wZ2GJ1YSuBxEhuHMcqO1VmWo7Rc='; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'"

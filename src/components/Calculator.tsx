@@ -33,13 +33,6 @@ export function Calculator() {
   const [downAmountInput, setDownAmountInput] = useState(() =>
     formatNumber(calculate(DEFAULT_PRICE, DEFAULT_MONTHS, DEFAULT_DOWN_PAYMENT_PERCENT).downPaymentAmount),
   )
-  // While the user is actively typing, keystrokes are held here instead of
-  // being committed to `downPercent` immediately. The down-payment amount
-  // feeds back into the markup rate (and thus the total), so committing on
-  // every keystroke made the field, the slider and the breakdown panel each
-  // land on a different rounded amount mid-edit. Holding a draft keeps every
-  // other number frozen at the last committed value until the edit is done
-  // (blur or Enter), when everything is recalculated and settles together.
   const [downAmountDraft, setDownAmountDraft] = useState<string | null>(null)
 
   const priceCursor = useCursorSafeDigitInput()
@@ -52,10 +45,6 @@ export function Calculator() {
     [price, months, downPercent, markupRate],
   )
 
-  // The down-payment slider drags across round ruble amounts (like the
-  // price slider), not raw percent — the bounds are the min/max allowed
-  // percent converted to rubles and snapped to the nearest step so every
-  // reachable position is a round number.
   const downAmountBounds = useMemo(() => {
     const total = rawResult.totalWithMarkup
     const rawMin = total * (MIN_DOWN_PAYMENT_PERCENT / 100)
@@ -65,13 +54,6 @@ export function Calculator() {
     return { min, max: Math.max(min, max) }
   }, [rawResult.totalWithMarkup])
 
-  // The down payment itself (not just the slider's visual position) is
-  // snapped to a round ruble amount before it feeds monthly payment, the
-  // breakdown panel and the slider — otherwise the browser's own range-input
-  // sanitization silently rounds the slider for display while every other
-  // number on the page keeps showing the raw, unrounded figure, so the
-  // thumb and the numbers disagree and appear to jump around as price
-  // changes.
   const result = useMemo(() => {
     if (rawResult.totalWithMarkup <= 0) return rawResult
     const roundedAmount = Math.min(
@@ -83,10 +65,6 @@ export function Calculator() {
 
   const roundedDownPercent = Math.round(result.downPaymentPercent)
 
-  // Keep the amount field in sync whenever price, term or the percent slider
-  // change it from elsewhere. While a draft is active the field renders the
-  // draft instead (see the input's `value` below), so this can run
-  // unconditionally without clobbering an in-progress edit.
   useEffect(() => {
     setDownAmountInput(formatNumber(result.downPaymentAmount))
   }, [result.downPaymentAmount])
@@ -107,10 +85,6 @@ export function Calculator() {
   function handlePriceChange(event: ChangeEvent<HTMLInputElement>) {
     const { digits, cleanText, hasPendingDecimal, restoreCursor } = priceCursor.parseWithCursor(event)
     const numeric = digits ? Math.min(MAX_PRICE, Number(digits)) : 0
-    // While a decimal separator is still pending, show exactly what was
-    // typed (e.g. "12,5") instead of reformatting it away mid-entry — a
-    // reformat on every keystroke would strip the separator before its
-    // fractional half lands, turning "12.55" into "1255" one digit at a time.
     const formatted = hasPendingDecimal ? cleanText : digits ? formatNumber(numeric) : ''
 
     setPrice(numeric)

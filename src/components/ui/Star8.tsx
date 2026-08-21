@@ -1,5 +1,3 @@
-/** The eight-point star from the NISAB mark, used sparingly as a bullet, a
- * section marker, or a faint background watermark — never as decoration. */
 export function Star8({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">

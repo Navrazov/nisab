@@ -29,10 +29,6 @@ function App() {
   }, [])
 
   useEffect(() => {
-    // Legal pages always open at the top. On the home route, honor an
-    // in-page anchor (e.g. clicking "Калькулятор" while on a legal page
-    // fires a hashchange before React re-renders the target section, so
-    // the browser's own anchor scroll has nothing to land on yet).
     if (route === 'home') {
       const hash = window.location.hash
       if (hash && hash !== '#') {

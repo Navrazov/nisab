@@ -1,8 +1,3 @@
-// The *monthly* markup rate is a straight line in the down-payment percent:
-// 0% down sits at the base rate, and each extra point of down payment
-// shaves off the slope — e.g. standard at 25% down is 5 - 0.048 * 25 = 3.8%
-// per month, at 50% down it's 5 - 0.048 * 50 = 2.6% per month. The total
-// markup then accrues linearly over the term (monthly rate * months).
 export interface MarkupRate {
   basePercent: number
   slopePerDownPaymentPoint: number
@@ -70,12 +65,6 @@ export function calculate(
   }
 }
 
-// The down-payment slider drags across round ruble amounts, but since the
-// markup rate now depends on the down-payment percent, the total (and thus
-// the percent needed to land on an exact ruble amount) shifts slightly as
-// the percent is adjusted. A few fixed-point iterations converge it — the
-// feedback is weak (a whole point of down payment only moves the rate by a
-// fraction of a percent) so this settles well within the loop below.
 export function resolveDownPaymentForAmount(
   price: number,
   months: number,

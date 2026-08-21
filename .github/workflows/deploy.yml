@@ -19,11 +19,6 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      # Yandex Object Storage is S3-compatible, so the standard AWS CLI
-      # (preinstalled on GitHub-hosted runners) works against it directly —
-      # just point it at the Yandex endpoint instead of AWS's.
-      # CDN edge cache TTL is set to 5 minutes, so a new deploy goes live on
-      # its own shortly after upload — no separate purge step needed.
       - name: Sync dist/ to Yandex Object Storage
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.YC_ACCESS_KEY_ID }}
