@@ -22,7 +22,8 @@ export function CookieBanner() {
     <div className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-paper-raised transition-colors duration-300">
       <Container className="flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs leading-relaxed text-ink-soft sm:max-w-2xl">
-          Сайт использует файлы cookie и аналогичные технологии для работы и анализа посещаемости. Подробнее — в{' '}
+          Сайт использует файлы cookie для своей работы (сохранение темы оформления и вашего выбора в этом
+          сообщении), а также сервисами веб-аналитики при их подключении. Подробнее — в{' '}
           <a href="#/privacy-policy" className="underline underline-offset-2 hover:text-accent">
             Политике обработки персональных данных
           </a>

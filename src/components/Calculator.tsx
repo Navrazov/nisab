@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react'
+import { useEffect, useMemo, useState, type ChangeEvent, type KeyboardEvent } from 'react'
 import { Check, Minus, Plus } from 'lucide-react'
 import { Container } from './ui/Container'
 import { Slider } from './ui/Slider'
 import { buildWhatsAppHref } from '../lib/contacts'
-import { useCursorSafeDigitInput } from '../hooks/useCursorSafeDigitInput'
+import { extractNumeric, useCursorSafeDigitInput } from '../hooks/useCursorSafeDigitInput'
 import {
   DEFAULT_DOWN_PAYMENT_PERCENT,
   DEFAULT_MONTHS,
@@ -33,10 +33,17 @@ export function Calculator() {
   const [downAmountInput, setDownAmountInput] = useState(() =>
     formatNumber(calculate(DEFAULT_PRICE, DEFAULT_MONTHS, DEFAULT_DOWN_PAYMENT_PERCENT).downPaymentAmount),
   )
+  // While the user is actively typing, keystrokes are held here instead of
+  // being committed to `downPercent` immediately. The down-payment amount
+  // feeds back into the markup rate (and thus the total), so committing on
+  // every keystroke made the field, the slider and the breakdown panel each
+  // land on a different rounded amount mid-edit. Holding a draft keeps every
+  // other number frozen at the last committed value until the edit is done
+  // (blur or Enter), when everything is recalculated and settles together.
+  const [downAmountDraft, setDownAmountDraft] = useState<string | null>(null)
 
   const priceCursor = useCursorSafeDigitInput()
   const downAmountCursor = useCursorSafeDigitInput()
-  const skipDownAmountSyncRef = useRef(false)
 
   const markupRate = isPremium ? PREMIUM_MARKUP_RATE : STANDARD_MARKUP_RATE
 
@@ -77,15 +84,10 @@ export function Calculator() {
   const roundedDownPercent = Math.round(result.downPaymentPercent)
 
   // Keep the amount field in sync whenever price, term or the percent slider
-  // change it from elsewhere — but skip it right after the amount field's
-  // own handlers already set the input directly (including to an empty
-  // string while the user is mid-edit), otherwise this would immediately
-  // overwrite a cleared field back to "0".
+  // change it from elsewhere. While a draft is active the field renders the
+  // draft instead (see the input's `value` below), so this can run
+  // unconditionally without clobbering an in-progress edit.
   useEffect(() => {
-    if (skipDownAmountSyncRef.current) {
-      skipDownAmountSyncRef.current = false
-      return
-    }
     setDownAmountInput(formatNumber(result.downPaymentAmount))
   }, [result.downPaymentAmount])
 
@@ -103,9 +105,13 @@ export function Calculator() {
   }, [result, roundedDownPercent, isPremium])
 
   function handlePriceChange(event: ChangeEvent<HTMLInputElement>) {
-    const { digits, restoreCursor } = priceCursor.parseWithCursor(event)
+    const { digits, cleanText, hasPendingDecimal, restoreCursor } = priceCursor.parseWithCursor(event)
     const numeric = digits ? Math.min(MAX_PRICE, Number(digits)) : 0
-    const formatted = digits ? formatNumber(numeric) : ''
+    // While a decimal separator is still pending, show exactly what was
+    // typed (e.g. "12,5") instead of reformatting it away mid-entry — a
+    // reformat on every keystroke would strip the separator before its
+    // fractional half lands, turning "12.55" into "1255" one digit at a time.
+    const formatted = hasPendingDecimal ? cleanText : digits ? formatNumber(numeric) : ''
 
     setPrice(numeric)
     setPriceInput(formatted)
@@ -125,16 +131,23 @@ export function Calculator() {
   }
 
   function handleDownAmountChange(event: ChangeEvent<HTMLInputElement>) {
-    const { digits, restoreCursor } = downAmountCursor.parseWithCursor(event)
-    const total = result.totalWithMarkup
-    const maxAmount = total * (MAX_DOWN_PAYMENT_PERCENT / 100)
-    const numeric = digits ? Math.min(maxAmount, Number(digits)) : 0
-    const formatted = digits ? formatNumber(numeric) : ''
+    const { digits, cleanText, hasPendingDecimal, restoreCursor } = downAmountCursor.parseWithCursor(event)
+    const formatted = hasPendingDecimal ? cleanText : digits ? formatNumber(Number(digits)) : ''
 
-    skipDownAmountSyncRef.current = true
-    setDownPercent(total > 0 ? (numeric / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
-    setDownAmountInput(formatted)
+    setDownAmountDraft(formatted)
     restoreCursor(formatted)
+  }
+
+  function commitDownAmountDraft() {
+    if (downAmountDraft === null) return
+    const total = result.totalWithMarkup
+    const { digits } = extractNumeric(downAmountDraft)
+    const numeric = digits
+      ? Math.min(downAmountBounds.max, Math.max(downAmountBounds.min, Number(digits)))
+      : downAmountBounds.min
+
+    setDownPercent(total > 0 ? (numeric / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
+    setDownAmountDraft(null)
   }
 
   function handleDownAmountStep(direction: 1 | -1) {
@@ -147,11 +160,13 @@ export function Calculator() {
   }
 
   function handleDownAmountBlur() {
-    // Don't set the display value here — let the sync effect pick up
-    // `result.downPaymentPercent`, which is already clamped and rounded to
-    // the nearest step, so the field always settles on the same number the
-    // slider and the breakdown panel show.
-    setDownPercent(result.downPaymentPercent)
+    commitDownAmountDraft()
+  }
+
+  function handleDownAmountKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'Enter') {
+      event.currentTarget.blur()
+    }
   }
 
   return (
@@ -282,9 +297,10 @@ export function Calculator() {
                     id="downAmount"
                     ref={downAmountCursor.ref}
                     inputMode="numeric"
-                    value={downAmountInput}
+                    value={downAmountDraft ?? downAmountInput}
                     onChange={handleDownAmountChange}
                     onBlur={handleDownAmountBlur}
+                    onKeyDown={handleDownAmountKeyDown}
                     className="font-tabular w-full bg-transparent text-lg font-bold text-ink outline-none"
                   />
                   <span className="text-base text-ink-faint">₽</span>
