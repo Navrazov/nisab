@@ -66,6 +66,9 @@ export function Calculator() {
 
   const roundedDownPercent = Math.round(result.downPaymentPercent)
   const roundedMonthlyPayment = roundUpToHundred(result.monthlyPayment)
+  const roundedFinancedAmount = roundedMonthlyPayment * result.months
+  const roundedTotalWithMarkup = result.downPaymentAmount + roundedFinancedAmount
+  const roundedMarkupAmount = roundedTotalWithMarkup - result.price
 
   useEffect(() => {
     setDownAmountInput(formatNumber(result.downPaymentAmount))
@@ -317,13 +320,13 @@ export function Calculator() {
 
             <div className="mt-3 space-y-2 border-t border-line pt-3 text-base">
               <Row label="Стоимость товара" value={formatRub(result.price)} />
-              <Row label="Наценка" value={`+ ${formatRub(result.markupAmount)}`} />
-              <Row label="Итого с наценкой" value={formatRub(result.totalWithMarkup)} strong />
+              <Row label="Наценка" value={`+ ${formatRub(roundedMarkupAmount)}`} />
+              <Row label="Итого с наценкой" value={formatRub(roundedTotalWithMarkup)} strong />
               <Row
                 label={`Первый взнос (${roundedDownPercent}%)`}
                 value={`− ${formatRub(result.downPaymentAmount)}`}
               />
-              <Row label="Сумма в рассрочку" value={formatRub(roundedMonthlyPayment * result.months)} strong />
+              <Row label="Сумма в рассрочку" value={formatRub(roundedFinancedAmount)} strong />
             </div>
 
             <p className="mt-3 text-xs leading-snug text-ink-faint italic">
