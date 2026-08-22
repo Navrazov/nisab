@@ -323,7 +323,7 @@ export function Calculator() {
                 label={`Первый взнос (${roundedDownPercent}%)`}
                 value={`− ${formatRub(result.downPaymentAmount)}`}
               />
-              <Row label="Сумма в рассрочку" value={formatRub(result.financedAmount)} strong />
+              <Row label="Сумма в рассрочку" value={formatRub(roundedMonthlyPayment * result.months)} strong />
             </div>
 
             <p className="mt-3 text-xs leading-snug text-ink-faint italic">
