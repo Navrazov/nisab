@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type MouseEvent } from 'react'
 import { Menu, X } from 'lucide-react'
 import { Container } from './ui/Container'
 import { Star8 } from './ui/Star8'
@@ -18,14 +18,22 @@ export function Header() {
   const [open, setOpen] = useState(false)
   const { theme } = useTheme()
 
+  function handleMobileNavClick(event: MouseEvent<HTMLAnchorElement>, href: string) {
+    event.preventDefault()
+    setOpen(false)
+    window.setTimeout(() => {
+      window.location.hash = href
+    }, 300)
+  }
+
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-paper transition-colors duration-300">
       <Container className="flex h-24 items-center justify-between">
         <a href="#calculator" className="flex items-center gap-3.5">
-          <img src={theme === 'dark' ? iconWhite : iconNavy} alt="NISAB" className="h-16 w-16" />
+          <img key={theme} src={theme === 'dark' ? iconWhite : iconNavy} alt="NISAB" className="h-16 w-16" />
           <span className="flex flex-col leading-none">
             <span className="font-sans text-4xl font-bold tracking-wide text-ink">NISAB</span>
-            <span className="mt-2 flex items-center gap-1.5 whitespace-nowrap text-[10px] font-semibold tracking-[0.14em] text-ink-faint uppercase">
+            <span className="mt-2 flex items-center gap-1.5 whitespace-nowrap text-[9px] font-semibold tracking-[0.08em] text-ink-faint uppercase sm:text-[10px] sm:tracking-[0.14em]">
               <Star8 className="h-2 w-2 shrink-0" /> Рассрочка по нормам Ислама
             </span>
           </span>
@@ -81,7 +89,7 @@ export function Header() {
                 <a
                   key={link.href}
                   href={link.href}
-                  onClick={() => setOpen(false)}
+                  onClick={(event) => handleMobileNavClick(event, link.href)}
                   className="py-3.5 text-xs font-semibold tracking-[0.1em] text-ink-soft uppercase transition-colors duration-200 hover:text-accent"
                 >
                   {link.label}

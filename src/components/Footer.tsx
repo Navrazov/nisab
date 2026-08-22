@@ -25,7 +25,7 @@ export function Footer() {
         <div className="grid gap-10 border-b border-line pb-12 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr]">
           <div>
             <div className="flex items-center gap-3">
-              <img src={theme === 'dark' ? iconWhite : iconNavy} alt="NISAB" className="h-8 w-8" />
+              <img key={theme} src={theme === 'dark' ? iconWhite : iconNavy} alt="NISAB" className="h-8 w-8" />
               <span className="font-sans text-lg font-bold tracking-wide text-ink">NISAB</span>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed">
