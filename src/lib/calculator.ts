@@ -1,19 +1,22 @@
 export interface MarkupRate {
-  basePercent: number
+  basePercentAtZeroDown: number
   belowBreakpointQuadraticCoefficient: number
+  aboveBreakpointInterceptPercent: number
   slopeAtOrAboveBreakpoint: number
 }
 
 export const MARKUP_RATE_BREAKPOINT_PERCENT = 25
 
 export const STANDARD_MARKUP_RATE: MarkupRate = {
-  basePercent: 5,
+  basePercentAtZeroDown: 5,
   belowBreakpointQuadraticCoefficient: 0.00192,
+  aboveBreakpointInterceptPercent: 5,
   slopeAtOrAboveBreakpoint: 0.048,
 }
 export const PREMIUM_MARKUP_RATE: MarkupRate = {
-  basePercent: 4,
-  belowBreakpointQuadraticCoefficient: 0.0016,
+  basePercentAtZeroDown: 4.3,
+  belowBreakpointQuadraticCoefficient: 0.00208,
+  aboveBreakpointInterceptPercent: 4,
   slopeAtOrAboveBreakpoint: 0.04,
 }
 
@@ -54,10 +57,13 @@ export function calculate(
 
   const monthlyMarkupPercent =
     safeDownPercent >= MARKUP_RATE_BREAKPOINT_PERCENT
-      ? Math.max(0, markupRate.basePercent - markupRate.slopeAtOrAboveBreakpoint * safeDownPercent)
+      ? Math.max(
+          0,
+          markupRate.aboveBreakpointInterceptPercent - markupRate.slopeAtOrAboveBreakpoint * safeDownPercent,
+        )
       : Math.max(
           0,
-          markupRate.basePercent - markupRate.belowBreakpointQuadraticCoefficient * safeDownPercent ** 2,
+          markupRate.basePercentAtZeroDown - markupRate.belowBreakpointQuadraticCoefficient * safeDownPercent ** 2,
         )
   const markupPercent = monthlyMarkupPercent * safeMonths
   const markupAmount = safePrice * (markupPercent / 100)
@@ -114,6 +120,10 @@ const currencyFormatter = new Intl.NumberFormat('ru-RU', {
 
 export function formatRub(value: number): string {
   return `${currencyFormatter.format(Math.round(value))} ₽`
+}
+
+export function roundUpToHundred(value: number): number {
+  return Math.ceil(value / 100) * 100
 }
 
 export function formatNumber(value: number): string {

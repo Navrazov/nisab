@@ -21,6 +21,7 @@ import {
   formatNumber,
   formatRub,
   resolveDownPaymentForAmount,
+  roundUpToHundred,
   stepPrice,
 } from '../lib/calculator'
 
@@ -64,6 +65,7 @@ export function Calculator() {
   }, [rawResult, downAmountBounds, price, months, markupRate])
 
   const roundedDownPercent = Math.round(result.downPaymentPercent)
+  const roundedMonthlyPayment = roundUpToHundred(result.monthlyPayment)
 
   useEffect(() => {
     setDownAmountInput(formatNumber(result.downPaymentAmount))
@@ -76,11 +78,11 @@ export function Calculator() {
       result.downPaymentAmount > 0
         ? `Взнос ${roundedDownPercent}% (${formatRub(result.downPaymentAmount)}).`
         : 'Без первого взноса.',
-      `Ежемесячный платёж: ${formatRub(result.monthlyPayment)}.`,
+      `Ежемесячный платёж: ${formatRub(roundedMonthlyPayment)}.`,
       isPremium ? 'Тариф: Премиум.' : '',
     ].filter(Boolean)
     return buildWhatsAppHref(parts.join(' '))
-  }, [result, roundedDownPercent, isPremium])
+  }, [result, roundedDownPercent, roundedMonthlyPayment, isPremium])
 
   function handlePriceChange(event: ChangeEvent<HTMLInputElement>) {
     const { digits, cleanText, hasPendingDecimal, restoreCursor } = priceCursor.parseWithCursor(event)
@@ -309,11 +311,11 @@ export function Calculator() {
           <div className="flex flex-col rounded-3xl border border-line bg-paper-raised p-4 text-ink shadow-[0_24px_60px_-32px_rgba(0,0,0,0.45)] transition-colors duration-300 sm:p-6">
             <p className="text-xs tracking-[0.16em] text-ink-faint uppercase">Ежемесячный платёж</p>
             <p className="font-tabular mt-1 text-5xl leading-none font-bold text-accent dark:text-ink sm:text-6xl">
-              {formatRub(result.monthlyPayment)}
+              {formatRub(roundedMonthlyPayment)}
             </p>
             <p className="mt-1.5 text-xs text-ink-faint">в течение {result.months} месяцев</p>
 
-            <div className="mt-3 space-y-2 border-t border-line pt-3 text-sm">
+            <div className="mt-3 space-y-2 border-t border-line pt-3 text-base">
               <Row label="Стоимость товара" value={formatRub(result.price)} />
               <Row label="Наценка" value={`+ ${formatRub(result.markupAmount)}`} />
               <Row label="Итого с наценкой" value={formatRub(result.totalWithMarkup)} strong />
