@@ -308,7 +308,7 @@ export function Calculator() {
 
           <div className="flex flex-col rounded-3xl border border-line bg-paper-raised p-4 text-ink shadow-[0_24px_60px_-32px_rgba(0,0,0,0.45)] transition-colors duration-300 sm:p-6">
             <p className="text-xs tracking-[0.16em] text-ink-faint uppercase">Ежемесячный платёж</p>
-            <p className="font-tabular mt-1 text-4xl leading-none font-bold text-accent dark:text-ink sm:text-5xl">
+            <p className="font-tabular mt-1 text-5xl leading-none font-bold text-accent dark:text-ink sm:text-6xl">
               {formatRub(result.monthlyPayment)}
             </p>
             <p className="mt-1.5 text-xs text-ink-faint">в течение {result.months} месяцев</p>

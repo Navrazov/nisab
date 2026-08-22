@@ -1,10 +1,21 @@
 export interface MarkupRate {
   basePercent: number
-  slopePerDownPaymentPoint: number
+  belowBreakpointQuadraticCoefficient: number
+  slopeAtOrAboveBreakpoint: number
 }
 
-export const STANDARD_MARKUP_RATE: MarkupRate = { basePercent: 5, slopePerDownPaymentPoint: 0.048 }
-export const PREMIUM_MARKUP_RATE: MarkupRate = { basePercent: 4, slopePerDownPaymentPoint: 0.04 }
+export const MARKUP_RATE_BREAKPOINT_PERCENT = 25
+
+export const STANDARD_MARKUP_RATE: MarkupRate = {
+  basePercent: 5,
+  belowBreakpointQuadraticCoefficient: 0.00192,
+  slopeAtOrAboveBreakpoint: 0.048,
+}
+export const PREMIUM_MARKUP_RATE: MarkupRate = {
+  basePercent: 4,
+  belowBreakpointQuadraticCoefficient: 0.0016,
+  slopeAtOrAboveBreakpoint: 0.04,
+}
 
 export const MIN_PRICE = 1000
 export const MAX_PRICE = 1000000
@@ -41,10 +52,13 @@ export function calculate(
   const safeMonths = Math.min(MAX_MONTHS, Math.max(MIN_MONTHS, months))
   const safeDownPercent = Math.min(100, Math.max(0, downPaymentPercent))
 
-  const monthlyMarkupPercent = Math.max(
-    0,
-    markupRate.basePercent - markupRate.slopePerDownPaymentPoint * safeDownPercent,
-  )
+  const monthlyMarkupPercent =
+    safeDownPercent >= MARKUP_RATE_BREAKPOINT_PERCENT
+      ? Math.max(0, markupRate.basePercent - markupRate.slopeAtOrAboveBreakpoint * safeDownPercent)
+      : Math.max(
+          0,
+          markupRate.basePercent - markupRate.belowBreakpointQuadraticCoefficient * safeDownPercent ** 2,
+        )
   const markupPercent = monthlyMarkupPercent * safeMonths
   const markupAmount = safePrice * (markupPercent / 100)
   const totalWithMarkup = safePrice + markupAmount
