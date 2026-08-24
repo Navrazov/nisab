@@ -319,14 +319,13 @@ export function Calculator() {
             <p className="mt-1.5 text-xs text-ink-faint">в течение {result.months} месяцев</p>
 
             <div className="mt-3 space-y-2 border-t border-line pt-3 text-base">
-              <Row label="Стоимость товара" value={formatRub(result.price)} />
-              <Row label="Наценка" value={`+ ${formatRub(roundedMarkupAmount)}`} />
-              <Row label="Итого с наценкой" value={formatRub(roundedTotalWithMarkup)} strong />
+              <Row label="Себестоимость товара" value={formatRub(result.price)} />
+              <Row label="Наценка на товар" value={`+ ${formatRub(roundedMarkupAmount)}`} />
               <Row
                 label={`Первый взнос (${roundedDownPercent}%)`}
                 value={`− ${formatRub(result.downPaymentAmount)}`}
               />
-              <Row label="Сумма в рассрочку" value={formatRub(roundedFinancedAmount)} strong />
+              <Row label="Общая сумма с наценкой" value={formatRub(roundedTotalWithMarkup)} strong />
             </div>
 
             <p className="mt-3 text-xs leading-snug text-ink-faint italic">
