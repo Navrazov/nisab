@@ -26,6 +26,7 @@ import {
 } from '../lib/calculator'
 
 const PARTNER_CODE = '8687'
+const PARTNER_CODE_MAX_LENGTH = 8
 const PARTNER_UNLOCKED_KEY = 'nisab-partner-unlocked'
 
 export function Calculator() {
@@ -122,8 +123,14 @@ export function Calculator() {
     setShowCodeModal(true)
   }
 
+  function handleCodeInputChange(event: ChangeEvent<HTMLInputElement>) {
+    const digitsOnly = event.target.value.replace(/\D/g, '').slice(0, PARTNER_CODE_MAX_LENGTH)
+    setCodeInput(digitsOnly)
+    setCodeError(false)
+  }
+
   function submitPartnerCode() {
-    if (codeInput.trim() !== PARTNER_CODE) {
+    if (!codeInput || codeInput !== PARTNER_CODE) {
       setCodeError(true)
       return
     }
@@ -394,14 +401,13 @@ export function Calculator() {
             <input
               type="text"
               inputMode="numeric"
+              autoComplete="off"
+              pattern="\d*"
               autoFocus
               value={codeInput}
-              onChange={(event) => {
-                setCodeInput(event.target.value)
-                setCodeError(false)
-              }}
+              onChange={handleCodeInputChange}
               onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => {
-                if (event.key === 'Enter') submitPartnerCode()
+                if (event.key === 'Enter' && codeInput) submitPartnerCode()
               }}
               className={`mt-3 w-full rounded-xl border bg-paper px-3 py-2 text-sm text-ink outline-none transition-colors duration-200 focus:border-accent ${
                 codeError ? 'border-red-500' : 'border-line'
@@ -420,8 +426,9 @@ export function Calculator() {
               </button>
               <button
                 type="button"
+                disabled={!codeInput}
                 onClick={submitPartnerCode}
-                className="flex-1 rounded-full bg-accent py-2 text-xs font-semibold tracking-[0.06em] text-paper uppercase transition-colors duration-200 hover:opacity-90"
+                className="flex-1 rounded-full bg-accent py-2 text-xs font-semibold tracking-[0.06em] text-paper uppercase transition-colors duration-200 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:opacity-40"
               >
                 Подтвердить
               </button>
