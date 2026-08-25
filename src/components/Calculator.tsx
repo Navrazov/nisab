@@ -25,18 +25,8 @@ import {
   stepPrice,
 } from '../lib/calculator'
 
-const PARTNER_CODE = '8687'
-const PARTNER_CODE_MAX_LENGTH = 8
-const PARTNER_UNLOCKED_KEY = 'nisab-partner-unlocked'
-
 export function Calculator() {
   const [isPremium, setIsPremium] = useState(false)
-  const [partnerUnlocked, setPartnerUnlocked] = useState(
-    () => window.localStorage.getItem(PARTNER_UNLOCKED_KEY) === '1',
-  )
-  const [showCodeModal, setShowCodeModal] = useState(false)
-  const [codeInput, setCodeInput] = useState('')
-  const [codeError, setCodeError] = useState(false)
   const [price, setPrice] = useState(DEFAULT_PRICE)
   const [priceInput, setPriceInput] = useState(formatNumber(DEFAULT_PRICE))
   const [months, setMonths] = useState(DEFAULT_MONTHS)
@@ -113,33 +103,6 @@ export function Calculator() {
     setPriceInput(formatNumber(clamped))
   }
 
-  function handlePremiumToggleClick() {
-    if (partnerUnlocked) {
-      setIsPremium((prev) => !prev)
-      return
-    }
-    setCodeInput('')
-    setCodeError(false)
-    setShowCodeModal(true)
-  }
-
-  function handleCodeInputChange(event: ChangeEvent<HTMLInputElement>) {
-    const digitsOnly = event.target.value.replace(/\D/g, '').slice(0, PARTNER_CODE_MAX_LENGTH)
-    setCodeInput(digitsOnly)
-    setCodeError(false)
-  }
-
-  function submitPartnerCode() {
-    if (!codeInput || codeInput !== PARTNER_CODE) {
-      setCodeError(true)
-      return
-    }
-    window.localStorage.setItem(PARTNER_UNLOCKED_KEY, '1')
-    setPartnerUnlocked(true)
-    setIsPremium(true)
-    setShowCodeModal(false)
-  }
-
   function handlePriceStep(direction: 1 | -1) {
     const next = stepPrice(price || DEFAULT_PRICE, direction)
     setPrice(next)
@@ -200,14 +163,13 @@ export function Calculator() {
 
         <div className="grid gap-3 lg:grid-cols-2 lg:gap-5">
           <div className="space-y-3 rounded-3xl border border-line p-4 shadow-[0_24px_60px_-32px_rgba(0,0,0,0.45)] sm:p-6">
-            <label
-              className="flex cursor-pointer items-start gap-3 rounded-2xl border border-line p-3 transition-colors duration-200 hover:border-ink"
-              onClick={(event) => {
-                event.preventDefault()
-                handlePremiumToggleClick()
-              }}
-            >
-              <input type="checkbox" checked={isPremium} readOnly className="sr-only" />
+            <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-line p-3 transition-colors duration-200 hover:border-ink">
+              <input
+                type="checkbox"
+                checked={isPremium}
+                onChange={(event) => setIsPremium(event.target.checked)}
+                className="sr-only"
+              />
               <span
                 className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-md border transition-colors duration-200 ${
                   isPremium ? 'border-accent bg-accent' : 'border-line'
@@ -384,55 +346,6 @@ export function Calculator() {
           </div>
         </div>
       </Container>
-
-      {showCodeModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"
-          onClick={() => setShowCodeModal(false)}
-        >
-          <div
-            className="w-full max-w-xs rounded-3xl border border-line bg-paper-raised p-5 shadow-[0_24px_60px_-32px_rgba(0,0,0,0.45)]"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <p className="text-sm font-semibold text-ink">Введите код для активации тарифа Премиум</p>
-            <input
-              type="text"
-              inputMode="numeric"
-              autoComplete="off"
-              pattern="\d*"
-              autoFocus
-              value={codeInput}
-              onChange={handleCodeInputChange}
-              onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => {
-                if (event.key === 'Enter' && codeInput) submitPartnerCode()
-              }}
-              className={`mt-3 w-full rounded-xl border bg-paper px-3 py-2 text-sm text-ink outline-none transition-colors duration-200 focus:border-accent ${
-                codeError ? 'border-red-500' : 'border-line'
-              }`}
-              placeholder="Код партнёра"
-            />
-            {codeError && <p className="mt-1.5 text-xs text-red-500">Неверный код</p>}
-
-            <div className="mt-4 flex gap-2">
-              <button
-                type="button"
-                onClick={() => setShowCodeModal(false)}
-                className="flex-1 rounded-full border border-line py-2 text-xs font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors duration-200 hover:border-ink hover:text-ink"
-              >
-                Отмена
-              </button>
-              <button
-                type="button"
-                disabled={!codeInput}
-                onClick={submitPartnerCode}
-                className="flex-1 rounded-full bg-accent py-2 text-xs font-semibold tracking-[0.06em] text-paper uppercase transition-colors duration-200 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:opacity-40"
-              >
-                Подтвердить
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   )
 }
