@@ -394,10 +394,7 @@ export function Calculator() {
             className="w-full max-w-xs rounded-3xl border border-line bg-paper-raised p-5 shadow-[0_24px_60px_-32px_rgba(0,0,0,0.45)]"
             onClick={(event) => event.stopPropagation()}
           >
-            <p className="text-sm font-semibold text-ink">Введите код партнёра</p>
-            <p className="mt-1 text-xs text-ink-soft">
-              Тариф «Премиум» доступен только партнёрам NISAB.
-            </p>
+            <p className="text-sm font-semibold text-ink">Введите код для активации тарифа Премиум</p>
             <input
               type="text"
               inputMode="numeric"
