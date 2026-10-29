@@ -45,6 +45,7 @@ export function Calculator() {
     formatNumber(calculate(DEFAULT_PRICE, DEFAULT_MONTHS, DEFAULT_DOWN_PAYMENT_PERCENT).downPaymentAmount),
   )
   const [downAmountDraft, setDownAmountDraft] = useState<string | null>(null)
+  const [manualDownAmount, setManualDownAmount] = useState<number | null>(null)
 
   const priceCursor = useCursorSafeDigitInput()
   const downAmountCursor = useCursorSafeDigitInput()
@@ -67,12 +68,10 @@ export function Calculator() {
 
   const result = useMemo(() => {
     if (rawResult.totalWithMarkup <= 0) return rawResult
-    const roundedAmount = Math.min(
-      downAmountBounds.max,
-      Math.max(downAmountBounds.min, Math.round(rawResult.downPaymentAmount / PRICE_STEP) * PRICE_STEP),
-    )
-    return resolveDownPaymentForAmount(price, months, roundedAmount, markupRate, rawResult.downPaymentPercent)
-  }, [rawResult, downAmountBounds, price, months, markupRate])
+    const targetAmount = manualDownAmount ?? Math.round(rawResult.downPaymentAmount / PRICE_STEP) * PRICE_STEP
+    const clampedAmount = Math.min(downAmountBounds.max, Math.max(downAmountBounds.min, targetAmount))
+    return resolveDownPaymentForAmount(price, months, clampedAmount, markupRate, rawResult.downPaymentPercent)
+  }, [rawResult, downAmountBounds, manualDownAmount, price, months, markupRate])
 
   const roundedDownPercent = Math.round(result.downPaymentPercent)
   const roundedMonthlyPayment = roundUpToHundred(result.monthlyPayment)
@@ -163,15 +162,21 @@ export function Calculator() {
       : downAmountBounds.min
 
     setDownPercent(total > 0 ? (numeric / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
+    setManualDownAmount(numeric)
     setDownAmountDraft(null)
   }
 
   function handleDownAmountStep(direction: 1 | -1) {
     const total = result.totalWithMarkup
-    const next = Math.min(
-      downAmountBounds.max,
-      Math.max(downAmountBounds.min, result.downPaymentAmount + direction * PRICE_STEP),
-    )
+    const current = Math.round(result.downPaymentAmount)
+    const stepped =
+      current % PRICE_STEP === 0
+        ? current + direction * PRICE_STEP
+        : direction === 1
+          ? Math.ceil(current / PRICE_STEP) * PRICE_STEP
+          : Math.floor(current / PRICE_STEP) * PRICE_STEP
+    const next = Math.min(downAmountBounds.max, Math.max(downAmountBounds.min, stepped))
+    setManualDownAmount(null)
     setDownPercent(total > 0 ? (next / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
   }
 
@@ -341,6 +346,7 @@ export function Calculator() {
                   value={result.downPaymentAmount}
                   onChange={(amount) => {
                     const total = result.totalWithMarkup
+                    setManualDownAmount(null)
                     setDownPercent(total > 0 ? (amount / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
                   }}
                   ariaLabel="Первый взнос"

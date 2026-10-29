@@ -21,7 +21,7 @@ export const PREMIUM_MARKUP_RATE: MarkupRate = {
 }
 
 export const MIN_PRICE = 1000
-export const MAX_PRICE = 1000000
+export const MAX_PRICE = 3000000
 export const DEFAULT_PRICE = 50000
 export const PRICE_STEP = 500
 
