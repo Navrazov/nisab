@@ -63,13 +63,14 @@ export function Calculator() {
     const rawMax = total * (MAX_DOWN_PAYMENT_PERCENT / 100)
     const min = Math.ceil(rawMin / PRICE_STEP) * PRICE_STEP
     const max = Math.floor(rawMax / PRICE_STEP) * PRICE_STEP
-    return { min, max: Math.max(min, max) }
+    return { min, max: Math.max(min, max), manualMax: Math.max(min, Math.floor(rawMax)) }
   }, [rawResult.totalWithMarkup])
 
   const result = useMemo(() => {
     if (rawResult.totalWithMarkup <= 0) return rawResult
     const targetAmount = manualDownAmount ?? Math.round(rawResult.downPaymentAmount / PRICE_STEP) * PRICE_STEP
-    const clampedAmount = Math.min(downAmountBounds.max, Math.max(downAmountBounds.min, targetAmount))
+    const maxAmount = manualDownAmount === null ? downAmountBounds.max : downAmountBounds.manualMax
+    const clampedAmount = Math.min(maxAmount, Math.max(downAmountBounds.min, targetAmount))
     return resolveDownPaymentForAmount(price, months, clampedAmount, markupRate, rawResult.downPaymentPercent)
   }, [rawResult, downAmountBounds, manualDownAmount, price, months, markupRate])
 
@@ -158,7 +159,7 @@ export function Calculator() {
     const total = result.totalWithMarkup
     const { digits } = extractNumeric(downAmountDraft)
     const numeric = digits
-      ? Math.min(downAmountBounds.max, Math.max(downAmountBounds.min, Number(digits)))
+      ? Math.min(downAmountBounds.manualMax, Math.max(downAmountBounds.min, Number(digits)))
       : downAmountBounds.min
 
     setDownPercent(total > 0 ? (numeric / total) * 100 : DEFAULT_DOWN_PAYMENT_PERCENT)
