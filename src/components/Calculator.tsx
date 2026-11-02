@@ -60,11 +60,11 @@ export function Calculator() {
   const downAmountBounds = useMemo(() => {
     const total = rawResult.totalWithMarkup
     const rawMin = total * (MIN_DOWN_PAYMENT_PERCENT / 100)
-    const rawMax = total * (MAX_DOWN_PAYMENT_PERCENT / 100)
+    const rawMax = Math.min(price, total * (MAX_DOWN_PAYMENT_PERCENT / 100))
     const min = Math.ceil(rawMin / PRICE_STEP) * PRICE_STEP
     const max = Math.floor(rawMax / PRICE_STEP) * PRICE_STEP
     return { min, max: Math.max(min, max), manualMax: Math.max(min, Math.floor(rawMax)) }
-  }, [rawResult.totalWithMarkup])
+  }, [rawResult.totalWithMarkup, price])
 
   const result = useMemo(() => {
     if (rawResult.totalWithMarkup <= 0) return rawResult
